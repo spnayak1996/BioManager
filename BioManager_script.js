@@ -120,18 +120,18 @@ function computeStats(list) {
 
 function renderStats({ total, submitted, inReview, approved, live }) {
   const tiles = [
-    { key: "total",     value: total,     meta: statusTileMeta.total },
-    { key: "submitted", value: submitted, meta: statusTileMeta.submitted },
-    { key: "inReview",  value: inReview,  meta: statusTileMeta.inReview },
-    { key: "approved",  value: approved,  meta: statusTileMeta.approved },
-    { key: "live",      value: live,      meta: statusTileMeta.live }
+    { key: "total",     value: total,     meta: { label: "Total Bios",    icon: "icons/file-text.svg",    color: "#1f2937", border: "#d1d5db" } },
+    { key: "submitted", value: submitted, meta: { label: "Submitted",     icon: "icons/clock.svg",        color: "#92400e", border: "#ffd699" } },
+    { key: "inReview",  value: inReview,  meta: { label: "In Review",     icon: "icons/circle-alert.svg", color: "#075985", border: "#93c5fd" } },
+    { key: "approved",  value: approved,  meta: { label: "Approved",      icon: "icons/circle-check.svg", color: "#166534", border: "#86efac" } },
+    { key: "live",      value: live,      meta: { label: "Live",          icon: "icons/building.svg",     color: "#5b21b6", border: "#c4b5fd" } }
   ];
 
   return `
     <div class="stats-wrapper">
       <div class="stats">
         ${tiles.map(t => `
-          <div class="stat stat--tab"
+          <div class="stat stat--tab tab-${t.key}"
                style="border:1px solid ${t.meta.border}; color:${t.meta.color}">
             <div class="stat-head">
               <img src="${t.meta.icon}" alt="${t.meta.label}" class="stat-icon" />

@@ -149,6 +149,36 @@ header p {
   display: inline-block;
 }
 
+.tab-all .stat-icon {
+  /* #1f2937 */
+  filter: brightness(0) saturate(100%) invert(13%) sepia(10%) saturate(420%)
+          hue-rotate(176deg) brightness(95%) contrast(89%);
+}
+
+.tab-submitted .stat-icon {
+  /* #92400e */
+  filter: brightness(0) saturate(100%) invert(32%) sepia(59%) saturate(902%)
+          hue-rotate(1deg) brightness(96%) contrast(92%);
+}
+
+.tab-inReview .stat-icon {
+  /* #075985 */
+  filter: brightness(0) saturate(100%) invert(25%) sepia(72%) saturate(819%)
+          hue-rotate(169deg) brightness(89%) contrast(90%);
+}
+
+.tab-approved .stat-icon {
+  /* #166534 */
+  filter: brightness(0) saturate(100%) invert(35%) sepia(13%) saturate(1227%)
+          hue-rotate(73deg) brightness(92%) contrast(88%);
+}
+
+.tab-live .stat-icon {
+  /* #5b21b6 */
+  filter: brightness(0) saturate(100%) invert(22%) sepia(58%) saturate(958%)
+          hue-rotate(238deg) brightness(89%) contrast(91%);
+}
+
 .stat-label-text {
   font-size: 13px;
   font-weight: 700;
@@ -207,12 +237,38 @@ header p {
   font-weight: bold;
 }
 
-.status-icon {
+.table .status .status-icon {
   width: 14px;
   height: 14px;
   display: inline-block;
   vertical-align: middle;
-  border-radius: 50%;
+  margin-right: 0px;
+  filter: brightness(0) saturate(100%);
+}
+
+/* Per-status tints (match your label text colors) */
+.table .status.submitted .status-icon {
+  /* #92400e */
+  filter: brightness(0) saturate(100%) invert(32%) sepia(59%) saturate(902%)
+          hue-rotate(1deg) brightness(96%) contrast(92%);
+}
+
+.table .status.review .status-icon {
+  /* #075985 */
+  filter: brightness(0) saturate(100%) invert(25%) sepia(72%) saturate(819%)
+          hue-rotate(169deg) brightness(89%) contrast(90%);
+}
+
+.table .status.approved .status-icon {
+  /* #166534 */
+  filter: brightness(0) saturate(100%) invert(35%) sepia(13%) saturate(1227%)
+          hue-rotate(73deg) brightness(92%) contrast(88%);
+}
+
+.table .status.live .status-icon {
+  /* #5b21b6 */
+  filter: brightness(0) saturate(100%) invert(22%) sepia(58%) saturate(958%)
+          hue-rotate(238deg) brightness(89%) contrast(91%);
 }
 
 .submitted { background: #fef3c7; color: #92400e; }
