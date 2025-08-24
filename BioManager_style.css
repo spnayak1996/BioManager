@@ -14,52 +14,147 @@ body {
 
 /* Sidebar */
 .sidebar {
-  width: 240px;
-  background: #1e293b;
-  color: white;
+  width: 280px;
+  background: #fff;
+  color: #0f172a;
   display: flex;
   flex-direction: column;
-  padding: 20px;
-  position: relative;           
+  padding: 20px 18px;
+  border-right: 1px solid #e5e7eb;
+  position: relative;
 }
 
-.logo {
-  font-size: 20px;
-  margin-bottom: 20px;
+/* Brand block */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 4px 14px;
+}
+.brand-mark {
+  width: 48px; height: 48px;
+  border-radius: 14px;
+  background: #0f172a;
+  display: grid; place-items: center;
+  overflow: hidden;
+}
+.brand-mark img {
+  width: 22px; height: 22px; object-fit: contain; filter: brightness(0) invert(1);
+}
+.brand-texts { line-height: 1.2; }
+.brand-title { font-size: 22px; font-weight: 800; letter-spacing: -0.01em; }
+.brand-subtitle { font-size: 14px; color: #6b7280; margin-top: 2px; }
+
+.sidebar-sep { height: 1px; background: #e5e7eb; margin: 10px 0 14px; }
+
+/* NAVIGATION label */
+.nav-label {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: #6b7280;
+  font-weight: 700;
+  margin: 6px 6px 10px;
 }
 
+/* Nav: scrollable, leaves room for fixed user-info */
 .nav {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  overflow-y: auto;             
-  flex: 1;                      
-  padding-bottom: 60px;         
+  gap: 6px;
+  overflow-y: auto;
+  flex: 1;
+  padding-right: 4px;   /* keeps scrollbar off text */
+  padding-bottom: 72px; /* space for user-info */
 }
 
 .nav-link {
-  color: #cbd5e1;
+  display: flex; align-items: center; gap: 12px;
   text-decoration: none;
-  padding: 10px;
-  border-radius: 5px;
-  transition: background 0.2s;
+  color: #334155;
+  font-size: 18px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  transition: background .15s ease, color .15s ease;
 }
+.nav-link:hover { background: #f1f5f9; color: #0f172a; }
 
-.nav-link:hover,
 .nav-link.active {
-  background: #334155;
-  color: #fff;
+  background: #eef2ff;   /* subtle indigo-ish */
+  color: #0f172a;
+  font-weight: 800;
 }
 
+/* Icon sizing */
+.nav-ico {
+  width: 20px; height: 20px; flex: 0 0 20px; display: grid; place-items: center;
+}
+.nav-ico img {
+  width: 100%; height: 100%; object-fit: contain; display: block;
+}
+
+/* Fixed user block */
 .user-info {
-  position: absolute;           
-  bottom: 20px;
-  left: 20px;
-  right: 20px;
-  border-top: 1px solid #334155;
-  padding-top: 10px;
-  color: #cbd5e1;
-  background: #1e293b;          
+  position: absolute;
+  left: 18px; 
+  right: 18px; 
+  bottom: 16px;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 12px;
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center;
+  background: #fff;
+  border-radius: 8px;
+  padding: 12px 14px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+/* Left side: avatar + name + role */
+.user-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #22c55e; /* green bg */
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.user-meta {
+  line-height: 1.2;
+}
+
+.user-name {
+  font-weight: 700;
+  font-size: 15px;
+  color: #0f172a;
+}
+
+.user-role {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* Logout icon */
+.user-logout img {
+  width: 18px;
+  height: 18px;
+  display: block;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.user-logout img:hover {
+  opacity: 0.7;
 }
 
 /* Main content */
