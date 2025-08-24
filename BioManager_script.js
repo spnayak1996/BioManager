@@ -10,6 +10,14 @@ const statusImages = {
   "Live": "icons/building.svg"
 };
 
+const statusTileMeta = {
+  total:     { label: "Total Bios",       icon: "icons/file-text.svg",    color: "#1f2937", border: "#d1d5db" },
+  submitted: { label: "Submitted",        icon: "icons/clock.svg",        color: "#92400e", border: "#ffd699" },
+  inReview:  { label: "In Review",        icon: "icons/circle-alert.svg", color: "#075985", border: "#93c5fd" },
+  approved:  { label: "Approved",         icon: "icons/circle-check.svg", color: "#166534", border: "#86efac" },
+  live:      { label: "Live",             icon: "icons/building.svg",     color: "#5b21b6", border: "#c4b5fd" }
+};
+
 links.forEach(link => {
   link.addEventListener("click", e => {
     e.preventDefault();
@@ -111,13 +119,28 @@ function computeStats(list) {
 }
 
 function renderStats({ total, submitted, inReview, approved, live }) {
+  const tiles = [
+    { key: "total",     value: total,     meta: statusTileMeta.total },
+    { key: "submitted", value: submitted, meta: statusTileMeta.submitted },
+    { key: "inReview",  value: inReview,  meta: statusTileMeta.inReview },
+    { key: "approved",  value: approved,  meta: statusTileMeta.approved },
+    { key: "live",      value: live,      meta: statusTileMeta.live }
+  ];
+
   return `
-    <div class="stats">
-      <div class="stat"><h3>Total Bios</h3><p>${total}</p></div>
-      <div class="stat"><h3>Submitted</h3><p>${submitted}</p></div>
-      <div class="stat"><h3>In Review</h3><p>${inReview}</p></div>
-      <div class="stat"><h3>Approved</h3><p>${approved}</p></div>
-      <div class="stat"><h3>Live</h3><p>${live}</p></div>
+    <div class="stats-wrapper">
+      <div class="stats">
+        ${tiles.map(t => `
+          <div class="stat stat--tab"
+               style="border:1px solid ${t.meta.border}; color:${t.meta.color}">
+            <div class="stat-head">
+              <img src="${t.meta.icon}" alt="${t.meta.label}" class="stat-icon" />
+              <span class="stat-label-text">${t.meta.label}</span>
+            </div>
+            <div class="stat-value">${t.value}</div>
+          </div>
+        `).join("")}
+      </div>
     </div>
   `;
 }

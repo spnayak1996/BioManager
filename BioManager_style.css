@@ -104,32 +104,59 @@ header p {
   border-radius: 6px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
+  margin-left: 15px;
+  margin-right: 15px;
 }
 
 /* Stats boxes */
+.stats-wrapper {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
 .stats {
-  display: flex;
-  gap: 15px;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 30px;                                        
   margin-bottom: 20px;
+  width: 100%;
 }
 
 .stat {
-  flex: 1;
-  text-align: center;
+  height: 100%;
   background: #fff;
-  border-radius: 6px;
-  padding: 10px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  padding: 30px 14px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
 }
 
-.stat h3 {
-  font-size: 18px;
-  margin-bottom: 5px;
+.stat--tab {
+  text-align: left;
+  display: grid;
+  row-gap: 6px;
 }
 
-.stat p {
+.stat-head {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 10px;
+}
+
+.stat-icon {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+}
+
+.stat-label-text {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.stat-value {
   font-size: 22px;
-  font-weight: bold;
+  font-weight: 800;
 }
 
 /* Search bar + filter */
