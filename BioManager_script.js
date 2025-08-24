@@ -3,6 +3,13 @@ const pageTitle = document.getElementById("page-title");
 const pageSubtitle = document.getElementById("page-subtitle");
 const pageContent = document.getElementById("page-content");
 
+const statusImages = {
+  "Submitted": "icons/clock.svg",
+  "Ready for Review" : "icons/circle-alert.svg",
+  "Approved": "icons/circle-check.svg",
+  "Live": "icons/building.svg"
+};
+
 links.forEach(link => {
   link.addEventListener("click", e => {
     e.preventDefault();
@@ -119,15 +126,24 @@ function renderTableRows(list) {
   if (list.length === 0) {
     return `<tr><td colspan="5" style="color:#6b7280;">No results</td></tr>`;
   }
-  return list.map(b => `
-    <tr data-id="${b.id}">
-      <td>${b.name}<br><small>${b.email}</small></td>
-      <td><span class="status ${statusChipClass[b.status]}">${b.status}</span></td>
-      <td>${b.createdLabel}</td>
-      <td>${b.reviewInfo}</td>
-      <td><button class="view-btn">View</button></td>
-    </tr>
-  `).join("");
+
+  return list.map(b => {
+    const imgSrc = statusImages[b.status] || "icons/settings.svg";
+    return `
+      <tr data-id="${b.id}">
+        <td>${b.name}<br><small>${b.email}</small></td>
+        <td>
+          <span class="status ${statusChipClass[b.status]}">
+            <img src="${imgSrc}" alt="${b.status}" class="status-icon">
+            ${b.status}
+          </span>
+        </td>
+        <td>${b.createdLabel}</td>
+        <td>${b.reviewInfo}</td>
+        <td><button class="view-btn">View</button></td>
+      </tr>
+    `;
+  }).join("");
 }
 
 
