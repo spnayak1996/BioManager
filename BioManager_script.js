@@ -118,7 +118,7 @@ function computeStats(list) {
   return { total, submitted, inReview, approved, live };
 }
 
-function renderStats({ total, submitted, inReview, approved, live }) {
+function renderStatsGrid({ total, submitted, inReview, approved, live }) {
   const tiles = [
     { key: "total",     value: total,     meta: { label: "Total Bios",    icon: "icons/file-text.svg",    color: "#1f2937", border: "#d1d5db" } },
     { key: "submitted", value: submitted, meta: { label: "Submitted",     icon: "icons/clock.svg",        color: "#92400e", border: "#ffd699" } },
@@ -128,19 +128,17 @@ function renderStats({ total, submitted, inReview, approved, live }) {
   ];
 
   return `
-    <div class="stats-wrapper">
-      <div class="stats">
-        ${tiles.map(t => `
-          <div class="stat stat--tab tab-${t.key}"
-               style="border:1px solid ${t.meta.border}; color:${t.meta.color}">
-            <div class="stat-head">
-              <img src="${t.meta.icon}" alt="${t.meta.label}" class="stat-icon" />
-              <span class="stat-label-text">${t.meta.label}</span>
-            </div>
-            <div class="stat-value">${t.value}</div>
+    <div class="stats">
+      ${tiles.map(t => `
+        <div class="stat stat--tab tab-${t.key}"
+             style="border:1px solid ${t.meta.border}; color:${t.meta.color}">
+          <div class="stat-head">
+            <img src="${t.meta.icon}" alt="${t.meta.label}" class="stat-icon" />
+            <span class="stat-label-text">${t.meta.label}</span>
           </div>
-        `).join("")}
-      </div>
+          <div class="stat-value">${t.value}</div>
+        </div>
+      `).join("")}
     </div>
   `;
 }
@@ -178,12 +176,14 @@ function renderTableRows(list) {
 function renderAllBios() {
   const stats = computeStats(bios);
 
-  // Page skeleton
   pageContent.innerHTML = `
-    ${renderStats(stats)}
+    <div class="stats-wrapper" id="stats-root">
+      ${renderStatsGrid(stats)}   <!-- only the grid goes here -->
+    </div>
+
     <div class="card">
       <div class="search-filter">
-        <input id="bio-search" type="text" placeholder="Search bios (name or email)..." />
+        <input id="bio-search" type="text" placeholder="Search bios..." />
         <select id="bio-status">
           <option value="All Status">All Status</option>
           <option value="Submitted">Submitted</option>
@@ -210,7 +210,6 @@ function renderAllBios() {
     </div>
   `;
 
-  // Wire filters
   const search = document.getElementById("bio-search");
   const select = document.getElementById("bio-status");
   const tbody  = document.getElementById("bios-tbody");
@@ -225,12 +224,11 @@ function renderAllBios() {
       return matchesText && matchesStatus;
     });
 
-    // Update stats to reflect current full list (not filtered) — like screenshot
-    // If you want stats to reflect filtered results, swap `bios` => `filtered` below:
     const s = computeStats(bios);
-    pageContent.querySelector(".stats").outerHTML = renderStats(s);
 
-    // Rows
+    document.getElementById("stats-root").innerHTML = renderStatsGrid(s);
+
+    // rows
     tbody.innerHTML = renderTableRows(filtered);
   }
 
