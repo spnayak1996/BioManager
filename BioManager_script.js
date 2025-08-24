@@ -140,7 +140,12 @@ function renderTableRows(list) {
         </td>
         <td>${b.createdLabel}</td>
         <td>${b.reviewInfo}</td>
-        <td><button class="view-btn">View</button></td>
+        <td>
+          <button class="view-btn">
+            <img src="icons/eye.svg" alt="View" class="view-icon" />
+            View
+          </button>
+        </td>
       </tr>
     `;
   }).join("");

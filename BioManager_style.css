@@ -175,7 +175,7 @@ header p {
   align-items: center;
   gap: 6px;
   padding: 4px 10px;
-  border-radius: 16px; /* Rounded corners */
+  border-radius: 16px;
   font-size: 12px;
   font-weight: bold;
 }
@@ -185,7 +185,7 @@ header p {
   height: 14px;
   display: inline-block;
   vertical-align: middle;
-  border-radius: 50%; /* makes the icon itself circular */
+  border-radius: 50%;
 }
 
 .submitted { background: #fef3c7; color: #92400e; }
@@ -194,10 +194,24 @@ header p {
 .live      { background: #ede9fe; color: #5b21b6; }
 
 .view-btn {
-  padding: 5px 10px;
-  border: none;
-  background: #1e293b;
-  color: white;
-  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 1px solid #1e293b;  /* dark border */
+  background: white;
+  color: #1e293b;
+  border-radius: 6px;
+  font-size: 14px;
   cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.view-btn:hover {
+  background: #f1f5f9;
+}
+
+.view-icon {
+  width: 14px;
+  height: 14px;
 }
