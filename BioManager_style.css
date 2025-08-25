@@ -428,6 +428,7 @@ header p {
 .table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed;
 }
 
 .table-header {
@@ -449,12 +450,19 @@ header p {
   padding: 12px;
   text-align: left;
   border-bottom: 1px solid #e5e7eb;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .table th {
   font-weight: 600;
 }
-
+.table th:first-child,
+.table td:first-child {
+  white-space: normal;
+}
+.table td:nth-child(2) .status { white-space: nowrap; }
 .table tbody tr:last-child td {
   border-bottom: none;
   padding-bottom: 0;

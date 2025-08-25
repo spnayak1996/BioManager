@@ -208,6 +208,13 @@ function renderAllBios() {
       </div>
 
       <table class="table">
+        <colgroup>
+          <col style="width:25%">  <!-- Employee -->
+          <col style="width:21.25%">  <!-- Status -->
+          <col style="width:21.25%">  <!-- Created -->
+          <col style="width:21.25%">  <!-- Review Info -->
+          <col style="width:11.25%">   <!-- Actions -->
+      </colgroup>
         <thead>
           <tr>
             <th>Employee</th>
