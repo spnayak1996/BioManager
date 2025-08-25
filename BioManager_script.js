@@ -178,11 +178,11 @@ function renderAllBios() {
   const stats = computeStats(bios);
 
   pageContent.innerHTML = `
-  <div class="stats-wrapper" id="stats-root">
-    ${renderStatsGrid(stats)}
-  </div>
+    <div class="stats-wrapper" id="stats-root">
+      ${renderStatsGrid(stats)}
+    </div>
 
-  <div class="card">
+    <div class="card">
       <div class="search-row">
         <div class="search-input-wrap">
           <img src="icons/search.svg" class="search-ico" alt="" />
@@ -200,29 +200,29 @@ function renderAllBios() {
           <img src="icons/chevron-down.svg" class="select-caret" alt="" />
         </div>
       </div>
-  </div>
-
-  <div class="card">
-    <div class="table-header">
-      <h2 class="table-title">Bios (<span id="bios-count">${bios.length}</span>)</h2>
     </div>
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Employee</th>
-          <th>Status</th>
-          <th>Created</th>
-          <th>Review Info</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody id="bios-tbody">
-        ${renderTableRows(bios)}
-      </tbody>
-    </table>
-  </div>
-`;
 
+    <div class="card">
+      <div class="table-header">
+        <h2 class="table-title">Bios (<span id="bios-count">${bios.length}</span>)</h2>
+      </div>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Employee</th>
+            <th>Status</th>
+            <th>Created</th>
+            <th>Review Info</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="bios-tbody">
+          ${renderTableRows(bios)}
+        </tbody>
+      </table>
+    </div>
+  `;
 
   const search = document.getElementById("bio-search");
   const select = document.getElementById("bio-status");
@@ -238,15 +238,22 @@ function renderAllBios() {
       return matchesText && matchesStatus;
     });
 
+    // keep stat tiles as-is (whole dataset)
     const s = computeStats(bios);
     document.getElementById("stats-root").innerHTML = renderStatsGrid(s);
 
+    // update table rows
     tbody.innerHTML = renderTableRows(filtered);
+
+    // 🔹 update the count to reflect *filtered* rows
+    const countEl = document.getElementById("bios-count");
+    if (countEl) countEl.textContent = filtered.length;
   }
 
   search.addEventListener("input", applyFilters);
   select.addEventListener("change", applyFilters);
 }
+
 
 if (exportBtn) {
   exportBtn.onclick = () => {

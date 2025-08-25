@@ -428,6 +428,20 @@ header p {
   border-collapse: collapse;
 }
 
+.table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 10px;
+}
+
+.table-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+
 .table th,
 .table td {
   padding: 12px;
