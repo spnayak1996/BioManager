@@ -182,7 +182,7 @@ function renderAllBios() {
       ${renderStatsGrid(stats)}
     </div>
 
-    <div class="card">
+    <div class="card" id="search">
       <div class="search-row">
         <div class="search-input-wrap">
           <img src="icons/search.svg" class="search-ico" alt="" />
@@ -202,7 +202,7 @@ function renderAllBios() {
       </div>
     </div>
 
-    <div class="card">
+    <div class="card" id="bios_table">
       <div class="table-header">
         <h2 class="table-title">Bios (<span id="bios-count">${bios.length}</span>)</h2>
       </div>

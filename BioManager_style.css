@@ -251,6 +251,10 @@ header p {
   margin-right: 15px;
 }
 
+#bios_table {
+  padding-bottom: 12px;
+}
+
 /* Stats boxes */
 .stats-wrapper {
   padding-right: 15px;
@@ -447,13 +451,13 @@ header p {
   border-bottom: 1px solid #e5e7eb;
 }
 
+.table th {
+  font-weight: 600;
+}
+
 .table tbody tr:last-child td {
   border-bottom: none;
   padding-bottom: 0;
-}
-
-.table th {
-  font-weight: 600;
 }
 
 .status {
