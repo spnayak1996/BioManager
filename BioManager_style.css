@@ -63,8 +63,8 @@ body {
   gap: 6px;
   overflow-y: auto;
   flex: 1;
-  padding-right: 4px;   /* keeps scrollbar off text */
-  padding-bottom: 72px; /* space for user-info */
+  padding-right: 4px;
+  padding-bottom: 72px;
 }
 
 .nav-link {
@@ -79,7 +79,7 @@ body {
 .nav-link:hover { background: #f1f5f9; color: #0f172a; }
 
 .nav-link.active {
-  background: #eef2ff;   /* subtle indigo-ish */
+  background: #eef2ff;
   color: #0f172a;
   font-weight: 800;
 }
@@ -109,7 +109,6 @@ body {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
-/* Left side: avatar + name + role */
 .user-left {
   display: flex;
   align-items: center;
@@ -120,7 +119,7 @@ body {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: #22c55e; /* green bg */
+  background: #22c55e;
   color: white;
   display: flex;
   align-items: center;
@@ -167,14 +166,65 @@ body {
   background: #f9fafb;
 }
 
-/* Sticky header in main pane */
 .main-content > header {
   padding: 20px;
-  border-bottom: 1px solid #e5e7eb;
-  background: white;
   position: sticky;
   top: 0;
   z-index: 1;
+}
+
+.page-header {
+  padding: 20px;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #f9fafb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.page-headings {
+  margin-left: 15px;
+}
+
+.page-headings h1 {
+  font-size: 28px; 
+  color: #0f172a;
+  margin-bottom: 6px;
+  font-weight: 800;
+}
+.page-headings p {
+  color: #6b7280;
+  margin: 0;
+  font-size: 16px;
+}
+
+/* Export button */
+.btn-export {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 44px;
+  padding: 0 16px 0 14px;
+  background: #ffffff;
+  color: #0f172a;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0,0,0,.03);
+  transition: border-color .15s, box-shadow .15s, background .15s;
+  margin-right: 15px;
+}
+
+.btn-export:hover {
+  opacity: 0.7;
+}
+
+.btn-export-ico {
+  width: 18px;
+  height: 18px;
 }
 
 #page-content {
@@ -285,23 +335,91 @@ header p {
 }
 
 /* Search bar + filter */
-.search-filter {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
+.search-card {
+  background: #f8fafc;              
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 16px;
 }
 
-.search-filter input {
-  width: 250px;
-  padding: 8px;
-  border-radius: 4px;
-  border: 1px solid #ddd;
+/* Row that holds input + select */
+.search-row {
+  display: grid;
+  grid-template-columns: 1fr 220px;  
+  gap: 16px;
+  align-items: center;
 }
 
-.search-filter select {
-  padding: 8px;
-  border-radius: 4px;
-  border: 1px solid #ddd;
+/* Search input with left icon */
+.search-input-wrap {
+  position: relative;
+}
+.search-ico {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  opacity: .6;
+  pointer-events: none;
+}
+#bio-search {
+  width: 100%;
+  height: 44px;
+  padding: 0 12px 0 40px;           
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  outline: none;
+  font-size: 14px;
+  color: #111827;
+}
+#bio-search::placeholder { color: #9aa3af; }
+#bio-search:focus {
+  border-color: #c7d2fe;
+  box-shadow: 0 0 0 3px rgba(99,102,241,.15);
+}
+
+/* Select styled to match, with custom caret */
+.select-wrap {
+  position: relative;
+}
+#bio-status {
+  appearance: none;                 
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 100%;
+  height: 44px;
+  padding: 0 36px 0 14px;           
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #111827;
+  outline: none;
+}
+#bio-status:focus {
+  border-color: #c7d2fe;
+  box-shadow: 0 0 0 3px rgba(99,102,241,.15);
+}
+.select-caret {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+  opacity: .6;
+}
+
+/* Responsive: stack on small screens */
+@media (max-width: 720px) {
+  .search-row {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Table */
@@ -318,7 +436,6 @@ header p {
 }
 
 .table th {
-  background: #f3f4f6;
   font-weight: 600;
 }
 
@@ -341,7 +458,6 @@ header p {
   filter: brightness(0) saturate(100%);
 }
 
-/* Per-status tints (match your label text colors) */
 .table .status.submitted .status-icon {
   /* #92400e */
   filter: brightness(0) saturate(100%) invert(32%) sepia(59%) saturate(902%)

@@ -2,6 +2,8 @@ const links = document.querySelectorAll(".nav-link");
 const pageTitle = document.getElementById("page-title");
 const pageSubtitle = document.getElementById("page-subtitle");
 const pageContent = document.getElementById("page-content");
+const exportBtn = document.getElementById("export-csv");
+const logoutBtn = document.getElementById("user-logout");
 
 const statusImages = {
   "Submitted": "icons/clock.svg",
@@ -62,7 +64,6 @@ class Bio {
   }
 
   get createdLabel() {
-    // mm/dd/yyyy
     const m = String(this.created.getMonth() + 1).padStart(2, "0");
     const d = String(this.created.getDate()).padStart(2, "0");
     const y = this.created.getFullYear();
@@ -177,38 +178,51 @@ function renderAllBios() {
   const stats = computeStats(bios);
 
   pageContent.innerHTML = `
-    <div class="stats-wrapper" id="stats-root">
-      ${renderStatsGrid(stats)}   <!-- only the grid goes here -->
-    </div>
+  <div class="stats-wrapper" id="stats-root">
+    ${renderStatsGrid(stats)}
+  </div>
 
-    <div class="card">
-      <div class="search-filter">
-        <input id="bio-search" type="text" placeholder="Search bios..." />
-        <select id="bio-status">
-          <option value="All Status">All Status</option>
-          <option value="Submitted">Submitted</option>
-          <option value="Ready for Review">In Review</option>
-          <option value="Approved">Approved</option>
-          <option value="Live">Live</option>
-        </select>
+  <div class="card">
+      <div class="search-row">
+        <div class="search-input-wrap">
+          <img src="icons/search.svg" class="search-ico" alt="" />
+          <input id="bio-search" type="text" placeholder="Search bios..." />
+        </div>
+
+        <div class="select-wrap">
+          <select id="bio-status" aria-label="Filter by status">
+            <option value="All Status">All Status</option>
+            <option value="Submitted">Submitted</option>
+            <option value="Ready for Review">In Review</option>
+            <option value="Approved">Approved</option>
+            <option value="Live">Live</option>
+          </select>
+          <img src="icons/chevron-down.svg" class="select-caret" alt="" />
+        </div>
       </div>
+  </div>
 
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Employee</th>
-            <th>Status</th>
-            <th>Created</th>
-            <th>Review Info</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody id="bios-tbody">
-          ${renderTableRows(bios)}
-        </tbody>
-      </table>
+  <div class="card">
+    <div class="table-header">
+      <h2 class="table-title">Bios (<span id="bios-count">${bios.length}</span>)</h2>
     </div>
-  `;
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Employee</th>
+          <th>Status</th>
+          <th>Created</th>
+          <th>Review Info</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="bios-tbody">
+        ${renderTableRows(bios)}
+      </tbody>
+    </table>
+  </div>
+`;
+
 
   const search = document.getElementById("bio-search");
   const select = document.getElementById("bio-status");
@@ -225,10 +239,8 @@ function renderAllBios() {
     });
 
     const s = computeStats(bios);
-
     document.getElementById("stats-root").innerHTML = renderStatsGrid(s);
 
-    // rows
     tbody.innerHTML = renderTableRows(filtered);
   }
 
@@ -236,7 +248,18 @@ function renderAllBios() {
   select.addEventListener("change", applyFilters);
 }
 
-/***********************
- * Boot
- ***********************/
-updatePage("all-bios"); // default route
+if (exportBtn) {
+  exportBtn.onclick = () => {
+    console.log("Export CSV button tapped!");
+    alert("Export CSV button tapped!");
+  };
+}
+
+if (logoutBtn) {
+  logoutBtn.onclick = () => {
+    console.log("logout button tapped!");
+    alert("logout button tapped!");
+  };
+}
+
+updatePage("all-bios");

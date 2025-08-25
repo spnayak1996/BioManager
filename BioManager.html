@@ -54,17 +54,24 @@
         <div class="user-role">Admin</div>
       </div>
     </div>
-    <div class="user-logout">
+    <button class="user-logout">
       <img src="icons/logout.svg" alt="Logout" />
-    </div>
+    </button>
   </div>
 </aside>
 
 
   <main class="main-content">
-    <header>
-      <h1 id="page-title">All Bios</h1>
-      <p id="page-subtitle">Overview of all employee bio submissions</p>
+    <header class="page-header">
+      <div class="page-headings">
+        <h1 id="page-title">All Bios</h1>
+        <p id="page-subtitle">Overview of all employee bio submissions</p>
+      </div>
+
+      <button id="export-csv" class="btn-export" type="button">
+        <img src="icons/export.svg" alt="" class="btn-export-ico" />
+        Export CSV
+      </button>
     </header>
     <section id="page-content">
       <!-- Content will be injected by JS -->
