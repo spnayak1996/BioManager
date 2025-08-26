@@ -1,3 +1,5 @@
+import { Bio } from "./Bio.js";
+
 const links = document.querySelectorAll(".nav-link");
 const pageTitle = document.getElementById("page-title");
 const pageSubtitle = document.getElementById("page-subtitle");
@@ -10,14 +12,6 @@ const statusImages = {
   "Ready for Review" : "icons/circle-alert.svg",
   "Approved": "icons/circle-check.svg",
   "Live": "icons/building.svg"
-};
-
-const statusTileMeta = {
-  total:     { label: "Total Bios",       icon: "icons/file-text.svg",    color: "#1f2937", border: "#d1d5db" },
-  submitted: { label: "Submitted",        icon: "icons/clock.svg",        color: "#92400e", border: "#ffd699" },
-  inReview:  { label: "In Review",        icon: "icons/circle-alert.svg", color: "#075985", border: "#93c5fd" },
-  approved:  { label: "Approved",         icon: "icons/circle-check.svg", color: "#166534", border: "#86efac" },
-  live:      { label: "Live",             icon: "icons/building.svg",     color: "#5b21b6", border: "#c4b5fd" }
 };
 
 links.forEach(link => {
@@ -44,64 +38,7 @@ function updatePage(section) {
   }
 }
 
-class Bio {
-  /**
-   * @param {object} o
-   * @param {string} o.id
-   * @param {string} o.name
-   * @param {string} o.email
-   * @param {"Submitted"|"Ready for Review"|"Approved"|"Live"} o.status
-   * @param {Date|string} o.created
-   * @param {string} o.reviewInfo
-   */
-  constructor(o) {
-    this.id = o.id;
-    this.name = o.name;
-    this.email = o.email;
-    this.status = o.status;
-    this.created = o.created instanceof Date ? o.created : new Date(o.created);
-    this.reviewInfo = o.status == "Submitted" || o.status == "Ready for Review" ? "Not reviewed" : "Reviewed";
-  }
-
-  get createdLabel() {
-    const m = String(this.created.getMonth() + 1).padStart(2, "0");
-    const d = String(this.created.getDate()).padStart(2, "0");
-    const y = this.created.getFullYear();
-    return `${m}/${d}/${y}`;
-  }
-}
-
-//Edit this array to simulate dynamic data
-let bios = [
-  new Bio({
-    id: "1",
-    name: "Achal Aggarwal",
-    email: "achal@bornwest.com",
-    status: "Live",
-    created: "2025-07-14",
-  }),
-  new Bio({
-    id: "2",
-    name: "Prateek Sharma",
-    email: "prateek@bornwest.com",
-    status: "Approved",
-    created: "2025-07-07",
-  }),
-  new Bio({
-    id: "3",
-    name: "Himalaya Rajput",
-    email: "himalaya@bornwest.com",
-    status: "Ready for Review",
-    created: "2025-08-01",
-  }),
-  new Bio({
-    id: "3",
-    name: "Sumit Raj",
-    email: "sumit@bornwest.com",
-    status: "Submitted",
-    created: "2025-08-14",
-  })
-];
+let bios = Bio.all()
 
 const statusChipClass = {
   "Submitted": "submitted",
@@ -276,4 +213,7 @@ if (logoutBtn) {
   };
 }
 
-updatePage("all-bios");
+window.addEventListener("load", () => {
+  console.log("Everything including images done!");
+  updatePage("all-bios");
+});
