@@ -1,5 +1,7 @@
+// BioManager_script.js (refactored to use templates; no embedded HTML strings)
 import { Bio } from "./Bio.js";
 
+// ---------- DOM refs ----------
 const links = document.querySelectorAll(".nav-link");
 const pageTitle = document.getElementById("page-title");
 const pageSubtitle = document.getElementById("page-subtitle");
@@ -7,22 +9,203 @@ const pageContent = document.getElementById("page-content");
 const exportBtn = document.getElementById("export-csv");
 const logoutBtn = document.getElementById("user-logout");
 
+// ---------- Templates ----------
+const $ = (id) => document.getElementById(id);
+const tplStatsWrapper = $("stats-wrapper-template");
+const tplStatsTile = $("stats-tile-template");
+const tplSearchCard = $("search-card-template");
+const tplBiosTable = $("bios-table-template");
+const tplBioRow = $("bio-row-template");
+const tplComingSoon = $("coming-soon-template");
+
+const clone = (tpl) => tpl.content.firstElementChild.cloneNode(true);
+
+// ---------- Data / constants ----------
 const statusImages = {
   "Submitted": "icons/clock.svg",
-  "Ready for Review" : "icons/circle-alert.svg",
+  "Ready for Review": "icons/circle-alert.svg",
   "Approved": "icons/circle-check.svg",
-  "Live": "icons/building.svg"
+  "Live": "icons/building.svg",
 };
 
-links.forEach(link => {
-  link.addEventListener("click", e => {
-    e.preventDefault();
-    links.forEach(l => l.classList.remove("active"));
-    link.classList.add("active");
-    const section = link.getAttribute("href").replace("#", "");
-    updatePage(section);
+const statusChipClass = {
+  "Submitted": "submitted",
+  "Ready for Review": "review",
+  "Approved": "approved",
+  "Live": "live",
+};
+
+const tileMeta = {
+  total:     { label: "Total Bios",       icon: "icons/file-text.svg",    color: "#1f2937", border: "#d1d5db" },
+  submitted: { label: "Submitted",        icon: "icons/clock.svg",        color: "#92400e", border: "#ffd699" },
+  inReview:  { label: "In Review",        icon: "icons/circle-alert.svg", color: "#075985", border: "#93c5fd" },
+  approved:  { label: "Approved",         icon: "icons/circle-check.svg", color: "#166534", border: "#86efac" },
+  live:      { label: "Live",             icon: "icons/building.svg",     color: "#5b21b6", border: "#c4b5fd" },
+};
+
+// ---------- Helpers ----------
+function computeStats(list) {
+  const total = list.length;
+  const submitted = list.filter(b => b.status === "Submitted").length;
+  const inReview = list.filter(b => b.status === "Ready for Review").length;
+  const approved = list.filter(b => b.status === "Approved").length;
+  const live = list.filter(b => b.status === "Live").length;
+  return { total, submitted, inReview, approved, live };
+}
+
+function buildStats(stats) {
+  const wrapper = clone(tplStatsWrapper);
+  const container = wrapper.querySelector(".stats");
+
+  const order = [
+    ["total", stats.total],
+    ["submitted", stats.submitted],
+    ["inReview", stats.inReview],
+    ["approved", stats.approved],
+    ["live", stats.live],
+  ];
+
+  for (const [key, value] of order) {
+    const meta = tileMeta[key];
+    const tile = clone(tplStatsTile);
+    tile.dataset.key = key;
+    tile.classList.add(`tab-${key}`);
+    tile.style.border = `1px solid ${meta.border}`;
+    tile.style.color = meta.color;
+
+    const icon = tile.querySelector(".stat-icon");
+    const label = tile.querySelector(".stat-label-text");
+    const val = tile.querySelector(".stat-value");
+
+    icon.src = meta.icon;
+    icon.alt = meta.label;
+    label.textContent = meta.label;
+    val.textContent = value;
+
+    container.appendChild(tile);
+  }
+  return wrapper;
+}
+
+function updateStatsCounts(wrapper, stats) {
+  const map = {
+    total: stats.total,
+    submitted: stats.submitted,
+    inReview: stats.inReview,
+    approved: stats.approved,
+    live: stats.live,
+  };
+  wrapper.querySelectorAll(".stat").forEach(tile => {
+    const key = tile.dataset.key;
+    const val = tile.querySelector(".stat-value");
+    if (val && key in map) val.textContent = map[key];
   });
-});
+}
+
+function buildSearchCard() {
+  return clone(tplSearchCard);
+}
+
+function buildRow(bio) {
+  const tr = clone(tplBioRow);
+  tr.dataset.id = bio.id;
+
+  tr.querySelector(".js-name").textContent = bio.name;
+  tr.querySelector(".js-email").textContent = bio.email;
+
+  const statusWrap = tr.querySelector(".status");
+  statusWrap.classList.add(statusChipClass[bio.status] || "");
+
+  const ico = tr.querySelector(".status-icon");
+  ico.src = statusImages[bio.status] || "icons/settings.svg";
+  ico.alt = bio.status;
+
+  tr.querySelector(".js-status-text").textContent = bio.status;
+  tr.querySelector(".js-created").textContent = bio.createdLabel;
+  tr.querySelector(".js-review-info").textContent = bio.reviewInfo;
+
+  return tr;
+}
+
+function buildTable(list) {
+  const card = clone(tplBiosTable);
+  const tbody = card.querySelector(".js-bios-tbody");
+  const count = card.querySelector("#bios-count");
+  count.textContent = String(list.length);
+
+  const frag = document.createDocumentFragment();
+  if (list.length === 0) {
+    const tr = document.createElement("tr");
+    const td = document.createElement("td");
+    td.colSpan = 5;
+    td.style.color = "#6b7280";
+    td.textContent = "No results";
+    tr.appendChild(td);
+    frag.appendChild(tr);
+  } else {
+    for (const b of list) frag.appendChild(buildRow(b));
+  }
+
+  tbody.appendChild(frag);
+  return card;
+}
+
+// ---------- Page rendering ----------
+function renderAllBios() {
+  const bios = Bio.all();
+  const stats = computeStats(bios);
+
+  const statsEl = buildStats(stats);
+  const searchEl = buildSearchCard();
+  const tableEl = buildTable(bios);
+
+  pageContent.replaceChildren(statsEl, searchEl, tableEl);
+
+  const search = searchEl.querySelector("#bio-search");
+  const select = searchEl.querySelector("#bio-status");
+  const tbody = tableEl.querySelector(".js-bios-tbody");
+  const countEl = tableEl.querySelector("#bios-count");
+
+  function applyFilters() {
+    const q = (search.value || "").trim().toLowerCase();
+    const status = select.value;
+
+    const filtered = bios.filter(b => {
+      const matchesText = !q || b.name.toLowerCase().includes(q) || b.email.toLowerCase().includes(q);
+      const matchesStatus = status === "All Status" || b.status === status;
+      return matchesText && matchesStatus;
+    });
+
+    // stats reflect the full dataset (unchanged), but keep values in sync anyway
+    updateStatsCounts(statsEl, computeStats(bios));
+
+    // update rows
+    while (tbody.firstChild) tbody.removeChild(tbody.firstChild);
+    if (filtered.length === 0) {
+      const tr = document.createElement("tr");
+      const td = document.createElement("td");
+      td.colSpan = 5;
+      td.style.color = "#6b7280";
+      td.textContent = "No results";
+      tr.appendChild(td);
+      tbody.appendChild(tr);
+    } else {
+      const frag = document.createDocumentFragment();
+      for (const b of filtered) frag.appendChild(buildRow(b));
+      tbody.appendChild(frag);
+    }
+
+    // update count to reflect filtered rows
+    countEl.textContent = String(filtered.length);
+  }
+
+  search.addEventListener("input", applyFilters);
+  select.addEventListener("change", applyFilters);
+}
+
+function renderComingSoon() {
+  pageContent.replaceChildren(clone(tplComingSoon));
+}
 
 function updatePage(section) {
   switch (section) {
@@ -34,170 +217,20 @@ function updatePage(section) {
     default:
       pageTitle.textContent = section.replace("-", " ").toUpperCase();
       pageSubtitle.textContent = "";
-      pageContent.innerHTML = `<div class="card">Coming Soon...</div>`;
+      renderComingSoon();
   }
 }
 
-let bios = Bio.all()
-
-const statusChipClass = {
-  "Submitted": "submitted",
-  "Ready for Review": "review",
-  "Approved": "approved",
-  "Live": "live",
-};
-
-function computeStats(list) {
-  const total = list.length;
-  const submitted = list.filter(b => b.status === "Submitted").length;
-  const inReview = list.filter(b => b.status === "Ready for Review").length;
-  const approved = list.filter(b => b.status === "Approved").length;
-  const live = list.filter(b => b.status === "Live").length;
-  return { total, submitted, inReview, approved, live };
-}
-
-function renderStatsGrid({ total, submitted, inReview, approved, live }) {
-  const tiles = [
-    { key: "total",     value: total,     meta: { label: "Total Bios",    icon: "icons/file-text.svg",    color: "#1f2937", border: "#d1d5db" } },
-    { key: "submitted", value: submitted, meta: { label: "Submitted",     icon: "icons/clock.svg",        color: "#92400e", border: "#ffd699" } },
-    { key: "inReview",  value: inReview,  meta: { label: "In Review",     icon: "icons/circle-alert.svg", color: "#075985", border: "#93c5fd" } },
-    { key: "approved",  value: approved,  meta: { label: "Approved",      icon: "icons/circle-check.svg", color: "#166534", border: "#86efac" } },
-    { key: "live",      value: live,      meta: { label: "Live",          icon: "icons/building.svg",     color: "#5b21b6", border: "#c4b5fd" } }
-  ];
-
-  return `
-    <div class="stats">
-      ${tiles.map(t => `
-        <div class="stat stat--tab tab-${t.key}"
-             style="border:1px solid ${t.meta.border}; color:${t.meta.color}">
-          <div class="stat-head">
-            <img src="${t.meta.icon}" alt="${t.meta.label}" class="stat-icon" />
-            <span class="stat-label-text">${t.meta.label}</span>
-          </div>
-          <div class="stat-value">${t.value}</div>
-        </div>
-      `).join("")}
-    </div>
-  `;
-}
-
-function renderTableRows(list) {
-  if (list.length === 0) {
-    return `<tr><td colspan="5" style="color:#6b7280;">No results</td></tr>`;
-  }
-
-  return list.map(b => {
-    const imgSrc = statusImages[b.status] || "icons/settings.svg";
-    return `
-      <tr data-id="${b.id}">
-        <td>${b.name}<br><small>${b.email}</small></td>
-        <td>
-          <span class="status ${statusChipClass[b.status]}">
-            <img src="${imgSrc}" alt="${b.status}" class="status-icon">
-            ${b.status}
-          </span>
-        </td>
-        <td>${b.createdLabel}</td>
-        <td>${b.reviewInfo}</td>
-        <td>
-          <button class="view-btn">
-            <img src="icons/eye.svg" alt="View" class="view-icon" />
-            View
-          </button>
-        </td>
-      </tr>
-    `;
-  }).join("");
-}
-
-
-function renderAllBios() {
-  const stats = computeStats(bios);
-
-  pageContent.innerHTML = `
-    <div class="stats-wrapper" id="stats-root">
-      ${renderStatsGrid(stats)}
-    </div>
-
-    <div class="card" id="search">
-      <div class="search-row">
-        <div class="search-input-wrap">
-          <img src="icons/search.svg" class="search-ico" alt="" />
-          <input id="bio-search" type="text" placeholder="Search bios..." />
-        </div>
-
-        <div class="select-wrap">
-          <select id="bio-status" aria-label="Filter by status">
-            <option value="All Status">All Status</option>
-            <option value="Submitted">Submitted</option>
-            <option value="Ready for Review">In Review</option>
-            <option value="Approved">Approved</option>
-            <option value="Live">Live</option>
-          </select>
-          <img src="icons/chevron-down.svg" class="select-caret" alt="" />
-        </div>
-      </div>
-    </div>
-
-    <div class="card" id="bios_table">
-      <div class="table-header">
-        <h2 class="table-title">Bios (<span id="bios-count">${bios.length}</span>)</h2>
-      </div>
-
-      <table class="table">
-        <colgroup>
-          <col style="width:25%">  <!-- Employee -->
-          <col style="width:21.25%">  <!-- Status -->
-          <col style="width:21.25%">  <!-- Created -->
-          <col style="width:21.25%">  <!-- Review Info -->
-          <col style="width:11.25%">   <!-- Actions -->
-      </colgroup>
-        <thead>
-          <tr>
-            <th>Employee</th>
-            <th>Status</th>
-            <th>Created</th>
-            <th>Review Info</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody id="bios-tbody">
-          ${renderTableRows(bios)}
-        </tbody>
-      </table>
-    </div>
-  `;
-
-  const search = document.getElementById("bio-search");
-  const select = document.getElementById("bio-status");
-  const tbody  = document.getElementById("bios-tbody");
-
-  function applyFilters() {
-    const q = search.value.trim().toLowerCase();
-    const status = select.value;
-
-    const filtered = bios.filter(b => {
-      const matchesText = !q || b.name.toLowerCase().includes(q) || b.email.toLowerCase().includes(q);
-      const matchesStatus = status === "All Status" || b.status === status;
-      return matchesText && matchesStatus;
-    });
-
-    // keep stat tiles as-is (whole dataset)
-    const s = computeStats(bios);
-    document.getElementById("stats-root").innerHTML = renderStatsGrid(s);
-
-    // update table rows
-    tbody.innerHTML = renderTableRows(filtered);
-
-    // 🔹 update the count to reflect *filtered* rows
-    const countEl = document.getElementById("bios-count");
-    if (countEl) countEl.textContent = filtered.length;
-  }
-
-  search.addEventListener("input", applyFilters);
-  select.addEventListener("change", applyFilters);
-}
-
+// ---------- Nav + buttons ----------
+links.forEach(link => {
+  link.addEventListener("click", e => {
+    e.preventDefault();
+    links.forEach(l => l.classList.remove("active"));
+    link.classList.add("active");
+    const section = link.getAttribute("href").replace("#", "");
+    updatePage(section);
+  });
+});
 
 if (exportBtn) {
   exportBtn.onclick = () => {
@@ -213,7 +246,5 @@ if (logoutBtn) {
   };
 }
 
-window.addEventListener("load", () => {
-  console.log("Everything including images done!");
-  updatePage("all-bios");
-});
+// ---------- Boot ----------
+window.addEventListener("load", () => updatePage("all-bios"));
