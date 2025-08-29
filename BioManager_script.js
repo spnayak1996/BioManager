@@ -55,7 +55,6 @@ function computeStats(list) {
 function buildStats(stats) {
   const wrapper = clone(tplStatsWrapper);
   const container = wrapper.querySelector(".stats");
-
   const order = [
     ["total", stats.total],
     ["submitted", stats.submitted],
@@ -69,8 +68,7 @@ function buildStats(stats) {
     const tile = clone(tplStatsTile);
     tile.dataset.key = key;
     tile.classList.add(`tab-${key}`);
-    tile.style.border = `1px solid ${meta.border}`;
-    tile.style.color = meta.color;
+    tile.style.color  = meta.color;
 
     const icon = tile.querySelector(".stat-icon");
     const label = tile.querySelector(".stat-label-text");
@@ -85,6 +83,7 @@ function buildStats(stats) {
   }
   return wrapper;
 }
+
 
 function updateStatsCounts(wrapper, stats) {
   const map = {
