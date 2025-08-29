@@ -480,6 +480,15 @@ header p {
   white-space: normal; /* allow wrapping for name/email */
 }
 
+.bios-list.is-empty { 
+  margin-top: 16px;        /* gap between "Bios (0)" header and empty message */
+}
+.bios-list .empty-state {
+  color: #6b7280; 
+  padding: 8px 12px;       /* optional: comfy empty message */
+  grid-column: 1 / -1;     /* span all columns */
+}
+
 /* Generic status icon filters (previously scoped to .table) */
 /* Pill-style status label */
 .status {

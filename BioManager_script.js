@@ -1,4 +1,3 @@
-// BioManager_script.js — hide list headers when there are no bios
 import { Bio } from "./Bio.js";
 
 // ---------- DOM refs ----------
@@ -127,27 +126,28 @@ function buildItem(bio) {
   return row;
 }
 
+// patch buildList(list)
 function buildList(list) {
   const card   = clone(tplBiosList);
-  const head   = card.querySelector(".bios-head");          // <-- header row
+  const head   = card.querySelector(".bios-head");
   const listEl = card.querySelector(".js-bios-list");
   const count  = card.querySelector("#bios-count");
   count.textContent = String(list.length);
 
   if (list.length === 0) {
-    // hide the list headers when there’s nothing to show
     if (head) head.style.display = "none";
+    listEl.classList.add("is-empty");
 
     const empty = document.createElement("div");
-    empty.className = "bios-row bios-grid";
+    empty.className = "bios-row bios-grid empty-state";
     const span = document.createElement("span");
     span.textContent = "No results";
-    span.style.color = "#6b7280";
-    span.style.gridColumn = "1 / -1"; // span all columns
     empty.appendChild(span);
     listEl.appendChild(empty);
   } else {
-    if (head) head.style.display = ""; // ensure visible when items exist
+    if (head) head.style.display = "";
+    listEl.classList.remove("is-empty");
+
     const frag = document.createDocumentFragment();
     for (const b of list) frag.appendChild(buildItem(b));
     listEl.appendChild(frag);
@@ -186,21 +186,20 @@ function renderAllBios() {
 
     updateStatsCounts(statsEl, computeStats(bios));
 
-    // toggle header visibility based on results
+    // toggle header visibility
     if (head) head.style.display = filtered.length ? "" : "none";
 
-    // re-render rows
     rowsWrap.replaceChildren();
     if (filtered.length === 0) {
+      rowsWrap.classList.add("is-empty");
       const empty = document.createElement("div");
-      empty.className = "bios-row bios-grid";
+      empty.className = "bios-row bios-grid empty-state";
       const span = document.createElement("span");
       span.textContent = "No results";
-      span.style.color = "#6b7280";
-      span.style.gridColumn = "1 / -1";
       empty.appendChild(span);
       rowsWrap.appendChild(empty);
     } else {
+      rowsWrap.classList.remove("is-empty");
       const frag = document.createDocumentFragment();
       for (const b of filtered) frag.appendChild(buildItem(b));
       rowsWrap.appendChild(frag);
