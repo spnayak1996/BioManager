@@ -1,4 +1,4 @@
-// BioManager_script.js (refactored to use templates; no embedded HTML strings)
+// BioManager_script.js — hide list headers when there are no bios
 import { Bio } from "./Bio.js";
 
 // ---------- DOM refs ----------
@@ -128,12 +128,16 @@ function buildItem(bio) {
 }
 
 function buildList(list) {
-  const card  = clone(tplBiosList);
+  const card   = clone(tplBiosList);
+  const head   = card.querySelector(".bios-head");          // <-- header row
   const listEl = card.querySelector(".js-bios-list");
-  const count = card.querySelector("#bios-count");
+  const count  = card.querySelector("#bios-count");
   count.textContent = String(list.length);
 
   if (list.length === 0) {
+    // hide the list headers when there’s nothing to show
+    if (head) head.style.display = "none";
+
     const empty = document.createElement("div");
     empty.className = "bios-row bios-grid";
     const span = document.createElement("span");
@@ -143,6 +147,7 @@ function buildList(list) {
     empty.appendChild(span);
     listEl.appendChild(empty);
   } else {
+    if (head) head.style.display = ""; // ensure visible when items exist
     const frag = document.createDocumentFragment();
     for (const b of list) frag.appendChild(buildItem(b));
     listEl.appendChild(frag);
@@ -162,10 +167,11 @@ function renderAllBios() {
 
   pageContent.replaceChildren(statsEl, searchEl, listEl);
 
-  const search  = searchEl.querySelector("#bio-search");
-  const select  = searchEl.querySelector("#bio-status");
+  const search   = searchEl.querySelector("#bio-search");
+  const select   = searchEl.querySelector("#bio-status");
   const rowsWrap = listEl.querySelector(".js-bios-list");
-  const countEl = listEl.querySelector("#bios-count");
+  const countEl  = listEl.querySelector("#bios-count");
+  const head     = listEl.querySelector(".bios-head"); // header element to toggle
 
   function applyFilters() {
     const q = (search.value || "").trim().toLowerCase();
@@ -179,6 +185,9 @@ function renderAllBios() {
     });
 
     updateStatsCounts(statsEl, computeStats(bios));
+
+    // toggle header visibility based on results
+    if (head) head.style.display = filtered.length ? "" : "none";
 
     // re-render rows
     rowsWrap.replaceChildren();
