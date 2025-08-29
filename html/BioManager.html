@@ -5,13 +5,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BioManager</title>
-  <link rel="stylesheet" href="BioManager_style.css" />
+  <link rel="stylesheet" href="../css/BioManager_style.css" />
 </head>
 <body>
   <aside class="sidebar">
     <div class="brand">
       <div class="brand-mark">
-        <img src="icons/file-text.svg" alt="" />
+        <img src="../icons/file-text.svg" alt="" />
       </div>
       <div class="brand-texts">
         <div class="brand-title">BioManager</div>
@@ -25,22 +25,22 @@
 
     <nav class="nav">
       <a href="#dashboard" class="nav-link">
-        <span class="nav-ico"><img src="icons/dashboard.svg" alt="" /></span>
+        <span class="nav-ico"><img src="../icons/dashboard.svg" alt="" /></span>
         <span class="nav-text">Dashboard</span>
       </a>
 
       <a href="#manage-users" class="nav-link">
-        <span class="nav-ico"><img src="icons/users.svg" alt="" /></span>
+        <span class="nav-ico"><img src="../icons/users.svg" alt="" /></span>
         <span class="nav-text">Manage Users</span>
       </a>
 
       <a href="#approved-domains" class="nav-link">
-        <span class="nav-ico"><img src="icons/building.svg" alt="" /></span>
+        <span class="nav-ico"><img src="../icons/building.svg" alt="" /></span>
         <span class="nav-text">Approved Domains</span>
       </a>
 
       <a href="#all-bios" class="nav-link active">
-        <span class="nav-ico"><img src="icons/file-text.svg" alt="" /></span>
+        <span class="nav-ico"><img src="../icons/file-text.svg" alt="" /></span>
         <span class="nav-text">All Bios</span>
       </a>
     </nav>
@@ -54,7 +54,7 @@
         </div>
       </div>
       <button class="user-logout" id="user-logout">
-        <img src="icons/logout.svg" alt="Logout" />
+        <img src="../icons/logout.svg" alt="Logout" />
       </button>
     </div>
   </aside>
@@ -67,7 +67,7 @@
       </div>
 
       <button id="export-csv" class="btn-export" type="button">
-        <img src="icons/export.svg" alt="" class="btn-export-ico" />
+        <img src="../icons/export.svg" alt="" class="btn-export-ico" />
         Export CSV
       </button>
     </header>
@@ -100,7 +100,7 @@
   <div class="card" id="search">
     <div class="search-row">
       <div class="search-input-wrap">
-        <img src="icons/search.svg" class="search-ico" alt="" />
+        <img src="../icons/search.svg" class="search-ico" alt="" />
         <input id="bio-search" class="js-bio-search" type="text" placeholder="Search bios..." />
       </div>
 
@@ -112,7 +112,7 @@
           <option value="Approved">Approved</option>
           <option value="Live">Live</option>
         </select>
-        <img src="icons/chevron-down.svg" class="select-caret" alt="" />
+        <img src="../icons/chevron-down.svg" class="select-caret" alt="" />
       </div>
     </div>
   </div>
@@ -157,7 +157,7 @@
     <div class="bios-col js-review-info"></div>
     <div class="bios-col">
       <button class="view-btn">
-        <img src="icons/eye.svg" alt="View" class="view-icon" />
+        <img src="../icons/eye.svg" alt="View" class="view-icon" />
         View
       </button>
     </div>
@@ -170,6 +170,6 @@
     <div class="card">Coming Soon...</div>
   </template>
 
-  <script type="module" src="BioManager_script.js"></script>
+  <script type="module" src="../scripts/BioManager_script.js"></script>
 </body>
 </html>

@@ -21,10 +21,10 @@ const clone = (tpl) => tpl.content.firstElementChild.cloneNode(true);
 
 // ---------- Data / constants ----------
 const statusImages = {
-  "Submitted": "icons/clock.svg",
-  "Ready for Review": "icons/circle-alert.svg",
-  "Approved": "icons/circle-check.svg",
-  "Live": "icons/building.svg",
+  "Submitted": "../icons/clock.svg",
+  "Ready for Review": "../icons/circle-alert.svg",
+  "Approved": "../icons/circle-check.svg",
+  "Live": "../icons/building.svg",
 };
 
 const statusChipClass = {
@@ -35,11 +35,11 @@ const statusChipClass = {
 };
 
 const tileMeta = {
-  total:     { label: "Total Bios",       icon: "icons/file-text.svg",    color: "#1f2937", border: "#d1d5db" },
-  submitted: { label: "Submitted",        icon: "icons/clock.svg",        color: "#92400e", border: "#ffd699" },
-  inReview:  { label: "In Review",        icon: "icons/circle-alert.svg", color: "#075985", border: "#93c5fd" },
-  approved:  { label: "Approved",         icon: "icons/circle-check.svg", color: "#166534", border: "#86efac" },
-  live:      { label: "Live",             icon: "icons/building.svg",     color: "#5b21b6", border: "#c4b5fd" },
+  total:     { label: "Total Bios",       icon: "../icons/file-text.svg",    color: "#1f2937", border: "#d1d5db" },
+  submitted: { label: "Submitted",        icon: "../icons/clock.svg",        color: "#92400e", border: "#ffd699" },
+  inReview:  { label: "In Review",        icon: "../icons/circle-alert.svg", color: "#075985", border: "#93c5fd" },
+  approved:  { label: "Approved",         icon: "../icons/circle-check.svg", color: "#166534", border: "#86efac" },
+  live:      { label: "Live",             icon: "../icons/building.svg",     color: "#5b21b6", border: "#c4b5fd" },
 };
 
 // ---------- Helpers ----------
@@ -115,7 +115,7 @@ function buildItem(bio) {
   statusWrap.classList.add(statusChipClass[bio.status] || "");
 
   const ico = row.querySelector(".status-icon");
-  ico.src = statusImages[bio.status] || "icons/settings.svg";
+  ico.src = statusImages[bio.status] || "../icons/settings.svg";
   ico.alt = bio.status;
 
   row.querySelector(".js-status-text").textContent = bio.status;
