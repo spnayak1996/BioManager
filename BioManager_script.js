@@ -14,8 +14,8 @@ const $ = (id) => document.getElementById(id);
 const tplStatsWrapper = $("stats-wrapper-template");
 const tplStatsTile = $("stats-tile-template");
 const tplSearchCard = $("search-card-template");
-const tplBiosTable = $("bios-table-template");
-const tplBioRow = $("bio-row-template");
+const tplBiosList = $("bios-list-template");
+const tplBioItem  = $("bio-item-template");
 const tplComingSoon = $("coming-soon-template");
 
 const clone = (tpl) => tpl.content.firstElementChild.cloneNode(true);
@@ -106,96 +106,97 @@ function buildSearchCard() {
   return clone(tplSearchCard);
 }
 
-function buildRow(bio) {
-  const tr = clone(tplBioRow);
-  tr.dataset.id = bio.id;
+function buildItem(bio) {
+  const row = clone(tplBioItem);
+  row.dataset.id = bio.id;
 
-  tr.querySelector(".js-name").textContent = bio.name;
-  tr.querySelector(".js-email").textContent = bio.email;
+  row.querySelector(".js-name").textContent  = bio.name;
+  row.querySelector(".js-email").textContent = bio.email;
 
-  const statusWrap = tr.querySelector(".status");
+  const statusWrap = row.querySelector(".status");
   statusWrap.classList.add(statusChipClass[bio.status] || "");
 
-  const ico = tr.querySelector(".status-icon");
+  const ico = row.querySelector(".status-icon");
   ico.src = statusImages[bio.status] || "icons/settings.svg";
   ico.alt = bio.status;
 
-  tr.querySelector(".js-status-text").textContent = bio.status;
-  tr.querySelector(".js-created").textContent = bio.createdLabel;
-  tr.querySelector(".js-review-info").textContent = bio.reviewInfo;
+  row.querySelector(".js-status-text").textContent = bio.status;
+  row.querySelector(".js-created").textContent     = bio.createdLabel;
+  row.querySelector(".js-review-info").textContent = bio.reviewInfo;
 
-  return tr;
+  return row;
 }
 
-function buildTable(list) {
-  const card = clone(tplBiosTable);
-  const tbody = card.querySelector(".js-bios-tbody");
+function buildList(list) {
+  const card  = clone(tplBiosList);
+  const listEl = card.querySelector(".js-bios-list");
   const count = card.querySelector("#bios-count");
   count.textContent = String(list.length);
 
-  const frag = document.createDocumentFragment();
   if (list.length === 0) {
-    const tr = document.createElement("tr");
-    const td = document.createElement("td");
-    td.colSpan = 5;
-    td.style.color = "#6b7280";
-    td.textContent = "No results";
-    tr.appendChild(td);
-    frag.appendChild(tr);
+    const empty = document.createElement("div");
+    empty.className = "bios-row bios-grid";
+    const span = document.createElement("span");
+    span.textContent = "No results";
+    span.style.color = "#6b7280";
+    span.style.gridColumn = "1 / -1"; // span all columns
+    empty.appendChild(span);
+    listEl.appendChild(empty);
   } else {
-    for (const b of list) frag.appendChild(buildRow(b));
+    const frag = document.createDocumentFragment();
+    for (const b of list) frag.appendChild(buildItem(b));
+    listEl.appendChild(frag);
   }
 
-  tbody.appendChild(frag);
   return card;
 }
 
 // ---------- Page rendering ----------
 function renderAllBios() {
-  const bios = Bio.all();
+  const bios  = Bio.all();
   const stats = computeStats(bios);
 
   const statsEl = buildStats(stats);
   const searchEl = buildSearchCard();
-  const tableEl = buildTable(bios);
+  const listEl   = buildList(bios);
 
-  pageContent.replaceChildren(statsEl, searchEl, tableEl);
+  pageContent.replaceChildren(statsEl, searchEl, listEl);
 
-  const search = searchEl.querySelector("#bio-search");
-  const select = searchEl.querySelector("#bio-status");
-  const tbody = tableEl.querySelector(".js-bios-tbody");
-  const countEl = tableEl.querySelector("#bios-count");
+  const search  = searchEl.querySelector("#bio-search");
+  const select  = searchEl.querySelector("#bio-status");
+  const rowsWrap = listEl.querySelector(".js-bios-list");
+  const countEl = listEl.querySelector("#bios-count");
 
   function applyFilters() {
     const q = (search.value || "").trim().toLowerCase();
     const status = select.value;
 
     const filtered = bios.filter(b => {
-      const matchesText = !q || b.name.toLowerCase().includes(q) || b.email.toLowerCase().includes(q);
+      const matchesText =
+        !q || b.name.toLowerCase().includes(q) || b.email.toLowerCase().includes(q);
       const matchesStatus = status === "All Status" || b.status === status;
       return matchesText && matchesStatus;
     });
 
-    // stats reflect the full dataset (unchanged), but keep values in sync anyway
     updateStatsCounts(statsEl, computeStats(bios));
 
-    // update rows
-    while (tbody.firstChild) tbody.removeChild(tbody.firstChild);
+    // re-render rows
+    rowsWrap.replaceChildren();
     if (filtered.length === 0) {
-      const tr = document.createElement("tr");
-      const td = document.createElement("td");
-      td.colSpan = 5;
-      td.style.color = "#6b7280";
-      td.textContent = "No results";
-      tr.appendChild(td);
-      tbody.appendChild(tr);
+      const empty = document.createElement("div");
+      empty.className = "bios-row bios-grid";
+      const span = document.createElement("span");
+      span.textContent = "No results";
+      span.style.color = "#6b7280";
+      span.style.gridColumn = "1 / -1";
+      empty.appendChild(span);
+      rowsWrap.appendChild(empty);
     } else {
       const frag = document.createDocumentFragment();
-      for (const b of filtered) frag.appendChild(buildRow(b));
-      tbody.appendChild(frag);
+      for (const b of filtered) frag.appendChild(buildItem(b));
+      rowsWrap.appendChild(frag);
     }
 
-    // update count to reflect filtered rows
     countEl.textContent = String(filtered.length);
   }
 

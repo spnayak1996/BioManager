@@ -119,57 +119,51 @@
 </template>
 
   <!-- Bios table (structure only) -->
-  <template id="bios-table-template">
-    <div class="card bios-card">
-      <div class="table-header">
-        <h2 class="table-title">Bios (<span id="bios-count"></span>)</h2>
-      </div>
-
-      <table class="table">
-        <colgroup>
-          <col style="width:25%">
-          <col style="width:21.25%">
-          <col style="width:21.25%">
-          <col style="width:21.25%">
-          <col style="width:11.25%">
-        </colgroup>
-        <thead>
-          <tr>
-            <th>Employee</th>
-            <th>Status</th>
-            <th>Created</th>
-            <th>Review Info</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody class="js-bios-tbody"></tbody>
-      </table>
+  <template id="bios-list-template">
+  <div class="card bios-card">
+    <div class="table-header">
+      <h2 class="table-title">Bios (<span id="bios-count"></span>)</h2>
     </div>
-  </template>
+
+    <!-- Head row -->
+    <div class="bios-head bios-grid">
+      <span>Employee</span>
+      <span>Status</span>
+      <span>Created</span>
+      <span>Review Info</span>
+      <span>Actions</span>
+    </div>
+
+    <!-- Rows go here -->
+    <div class="bios-list js-bios-list"></div>
+  </div>
+</template>
+
 
   <!-- Single bio row -->
-  <template id="bio-row-template">
-    <tr class="js-bio-row">
-      <td>
-        <span class="js-name"></span><br />
-        <small class="js-email"></small>
-      </td>
-      <td>
-        <span class="status">
-          <img class="status-icon" alt="" />
-          <span class="js-status-text"></span>
-        </span>
-      </td>
-      <td class="js-created"></td>
-      <td class="js-review-info"></td>
-      <td>
-        <button class="view-btn">
-          <img src="icons/eye.svg" alt="View" class="view-icon" />
-          View
-        </button>
-      </td>
-    </tr>
-  </template>
+  <template id="bio-item-template">
+  <div class="bios-row bios-grid js-bio-row">
+    <div class="bios-col">
+      <span class="js-name"></span><br />
+      <small class="js-email"></small>
+    </div>
+    <div class="bios-col">
+      <span class="status">
+        <img class="status-icon" alt="" />
+        <span class="js-status-text"></span>
+      </span>
+    </div>
+    <div class="bios-col js-created"></div>
+    <div class="bios-col js-review-info"></div>
+    <div class="bios-col">
+      <button class="view-btn">
+        <img src="icons/eye.svg" alt="View" class="view-icon" />
+        View
+      </button>
+    </div>
+  </div>
+</template>
+
 
   <!-- Coming soon fallback -->
   <template id="coming-soon-template">

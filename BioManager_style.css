@@ -270,9 +270,7 @@ header p {
   margin-right: 15px;
 }
 
-#bios_table {
-  padding-bottom: 12px;
-}
+.bios-card { padding-bottom: 18px; }
 
 /* Stats boxes */
 .stats-wrapper {
@@ -444,91 +442,91 @@ header p {
 }
 
 /* Table */
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: fixed;
-}
-
-.table-header {
-  display: flex;
+/* ----- Div-based bios grid (replaces table layout) ----- */
+.bios-grid {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr); /* each column flexes equally */
   align-items: center;
-  justify-content: space-between;
-  padding-bottom: 10px;
 }
 
-.table-title {
-  font-size: 22px;
-  font-weight: 800;
+.bios-head {
+  font-weight: 600;
   color: #0f172a;
+  border-bottom: 1px solid #e5e7eb;
 }
 
-
-.table th,
-.table td {
+.bios-head > span,
+.bios-row > .bios-col {
   padding: 12px;
-  text-align: left;
-  border-bottom: 1px solid #e5e7eb;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.table th {
-  font-weight: 600;
+.bios-row {
+  border-bottom: 1px solid #e5e7eb;
 }
-.table th:first-child,
-.table td:first-child {
-  white-space: normal;
-}
-.table td:nth-child(2) .status { white-space: nowrap; }
-.table tbody tr:last-child td {
-  border-bottom: none;
+
+.bios-list .bios-row:last-child > .bios-col {
   padding-bottom: 0;
 }
 
+.bios-list .bios-row:last-child {
+  border-bottom: none;
+}
+
+.bios-row > .bios-col:first-child {
+  white-space: normal; /* allow wrapping for name/email */
+}
+
+/* Generic status icon filters (previously scoped to .table) */
+/* Pill-style status label */
 .status {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   padding: 4px 10px;
-  border-radius: 16px;
-  font-size: 12px;
-  font-weight: bold;
+  border-radius: 9999px;   /* full pill */
+  line-height: 1;
+  white-space: nowrap;     /* keep it on one line */
+  border: 1px solid transparent; /* optional: lets color variants add borders */
 }
 
-.table .status .status-icon {
+.status .status-icon {
   width: 14px;
   height: 14px;
   display: inline-block;
   vertical-align: middle;
-  margin-right: 0px;
+  margin-right: 0;
   filter: brightness(0) saturate(100%);
 }
-
-.table .status.submitted .status-icon {
-  /* #92400e */
+.status.submitted .status-icon {
   filter: brightness(0) saturate(100%) invert(32%) sepia(59%) saturate(902%)
           hue-rotate(1deg) brightness(96%) contrast(92%);
 }
-
-.table .status.review .status-icon {
-  /* #075985 */
+.status.review .status-icon {
   filter: brightness(0) saturate(100%) invert(25%) sepia(72%) saturate(819%)
           hue-rotate(169deg) brightness(89%) contrast(90%);
 }
-
-.table .status.approved .status-icon {
-  /* #166534 */
+.status.approved .status-icon {
   filter: brightness(0) saturate(100%) invert(35%) sepia(13%) saturate(1227%)
           hue-rotate(73deg) brightness(92%) contrast(88%);
 }
-
-.table .status.live .status-icon {
-  /* #5b21b6 */
+.status.live .status-icon {
   filter: brightness(0) saturate(100%) invert(22%) sepia(58%) saturate(958%)
           hue-rotate(238deg) brightness(89%) contrast(91%);
 }
+
+/* Responsive: stack columns on small screens */
+@media (max-width: 720px) {
+  .bios-grid {
+    grid-template-columns: 1fr;
+  }
+  .bios-head { display: none; } /* hide header row on mobile */
+  .bios-row { grid-row-gap: 6px; }
+}
+
 
 .submitted { background: #fef3c7; color: #92400e; }
 .review    { background: #e0f2fe; color: #075985; }
