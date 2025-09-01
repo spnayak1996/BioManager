@@ -1,3 +1,6 @@
+/* BioManager_style.css */
+/* Shell layout + sidebar styling. Right-panel pages bring their own CSS. */
+
 * {
   margin: 0;
   padding: 0;
@@ -10,13 +13,13 @@ body {
   height: 100vh;
   overflow: hidden;
   background: #f9fafb;
+  color: #0f172a;
 }
 
-/* Sidebar */
+/* ---------- Sidebar ---------- */
 .sidebar {
   width: 280px;
   background: #fff;
-  color: #0f172a;
   display: flex;
   flex-direction: column;
   padding: 20px 18px;
@@ -38,9 +41,7 @@ body {
   display: grid; place-items: center;
   overflow: hidden;
 }
-.brand-mark img {
-  width: 22px; height: 22px; object-fit: contain; filter: brightness(0) invert(1);
-}
+.brand-mark img { width: 22px; height: 22px; filter: brightness(0) invert(1); }
 .brand-texts { line-height: 1.2; }
 .brand-title { font-size: 22px; font-weight: 800; letter-spacing: -0.01em; }
 .brand-subtitle { font-size: 14px; color: #6b7280; margin-top: 2px; }
@@ -56,7 +57,7 @@ body {
   margin: 6px 6px 10px;
 }
 
-/* Nav: scrollable, leaves room for fixed user-info */
+/* Nav list */
 .nav {
   display: flex;
   flex-direction: column;
@@ -64,7 +65,7 @@ body {
   overflow-y: auto;
   flex: 1;
   padding-right: 4px;
-  padding-bottom: 72px;
+  padding-bottom: 72px; /* space for fixed user block */
 }
 
 .nav-link {
@@ -77,492 +78,74 @@ body {
   transition: background .15s ease, color .15s ease;
 }
 .nav-link:hover { background: #f1f5f9; color: #0f172a; }
-
 .nav-link.active {
   background: #eef2ff;
   color: #0f172a;
   font-weight: 800;
 }
 
-/* Icon sizing */
 .nav-ico {
   width: 20px; height: 20px; flex: 0 0 20px; display: grid; place-items: center;
 }
-.nav-ico img {
-  width: 100%; height: 100%; object-fit: contain; display: block;
-}
+.nav-ico img { width: 100%; height: 100%; object-fit: contain; display: block; }
 
 /* Fixed user block */
 .user-info {
   position: absolute;
-  left: 18px; 
-  right: 18px; 
-  bottom: 16px;
+  left: 18px; right: 18px; bottom: 16px;
   border-top: 1px solid #e5e7eb;
   padding-top: 12px;
-  display: flex; 
-  justify-content: space-between; 
-  align-items: center;
+  display: flex; justify-content: space-between; align-items: center;
   background: #fff;
   padding: 12px 14px;
 }
 
-.user-left {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
+.user-left { display: flex; align-items: center; gap: 10px; }
 
 .user-avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: #22c55e;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  text-transform: uppercase;
+  width: 36px; height: 36px; border-radius: 50%;
+  background: #22c55e; color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: bold; text-transform: uppercase;
 }
 
-.user-meta {
-  line-height: 1.2;
-}
+.user-meta { line-height: 1.2; }
+.user-name { font-weight: 700; font-size: 15px; }
+.user-role { font-size: 13px; color: #6b7280; }
 
-.user-name {
-  font-weight: 700;
-  font-size: 15px;
-  color: #0f172a;
-}
-
-.user-role {
-  font-size: 13px;
-  color: #6b7280;
-}
-
-/* Logout icon */
 .user-logout {
-  border: none;
-  background: #f9fafb;
-  border-radius: 8px;
-  padding: 6px;
-  cursor: pointer;
-  transition: background 0.2s ease, transform 0.1s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  border: none; background: #f9fafb; border-radius: 8px; padding: 6px;
+  cursor: pointer; transition: background 0.2s ease, transform 0.1s ease;
+  display: flex; align-items: center; justify-content: center;
 }
-
-/* Hover and active states */
-.user-logout:hover {
-  background: #f3f4f6;
-  transform: scale(1.05);
-}
-
-/* Logout icon styling */
+.user-logout:hover { background: #f3f4f6; transform: scale(1.05); }
 .user-logout img {
-  width: 20px;
-  height: 20px;
-  display: block;
-  filter: brightness(0) invert(0.2);
-  transition: filter 0.2s ease;
+  width: 20px; height: 20px; display: block;
+  filter: brightness(0) invert(0.2); transition: filter 0.2s ease;
 }
+.user-logout:hover img { filter: brightness(0) invert(0.4); }
 
-.user-logout:hover img {
-  filter: brightness(0) invert(0.4);
-}
-
-/* Main content */
+/* ---------- Main (right panel container) ---------- */
 .main-content {
   flex: 1;
-  display: flex;
-  flex-direction: column;
   min-width: 0;
   overflow: hidden;
   background: #f9fafb;
-}
-
-.main-content > header {
-  padding: 20px;
-  position: sticky;
-  top: 0;
-  z-index: 1;
-}
-
-.page-header {
-  padding: 20px;
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  background: #f9fafb;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.page-headings {
-  margin-left: 15px;
-}
-
-.page-headings h1 {
-  font-size: 28px; 
-  color: #0f172a;
-  margin-bottom: 6px;
-  font-weight: 800;
-}
-.page-headings p {
-  color: #6b7280;
-  margin: 0;
-  font-size: 16px;
-}
-
-/* Export button */
-.btn-export {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  height: 44px;
-  padding: 0 16px 0 14px;
-  background: #ffffff;
-  color: #0f172a;
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 1px 2px rgba(0,0,0,.03);
-  transition: border-color .15s, box-shadow .15s, background .15s;
-  margin-right: 15px;
-}
-
-.btn-export:hover {
-  opacity: 0.7;
-}
-
-.btn-export-ico {
-  width: 18px;
-  height: 18px;
-}
-
-#page-content {
-  flex: 1;
-  padding: 20px;
-  overflow: auto;
-}
-
-header h1 {
-  font-size: 24px;
-  margin-bottom: 5px;
-}
-
-header p {
-  color: #6b7280;
-  margin-bottom: 20px;
-}
-
-.card {
-  background: white;
-  padding: 20px;
-  border-radius: 6px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
-  margin-left: 15px;
-  margin-right: 15px;
-}
-
-.bios-card { padding-bottom: 18px; }
-
-/* Stats boxes */
-.stats-wrapper {
-  padding-right: 15px;
-  padding-left: 15px;
-}
-
-.stats {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 30px;                                        
-  margin-bottom: 20px;
-  width: 100%;
 }
 
-.stat {
+/* The iframe fills the right panel */
+.content-frame {
+  width: 100%;
   height: 100%;
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  padding: 30px 14px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  border: 0;
+  display: block;
+  background: #f9fafb;
 }
 
-
-.stat--tab {
-  text-align: left;
-  display: grid;
-  row-gap: 6px;
-}
-
-.stat-head {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding-bottom: 10px;
-}
-
-.stat-icon {
-  width: 16px;
-  height: 16px;
-  display: inline-block;
-}
-
-.tab-all .stat-icon {
-  /* #1f2937 */
-  filter: brightness(0) saturate(100%) invert(13%) sepia(10%) saturate(420%)
-          hue-rotate(176deg) brightness(95%) contrast(89%);
-}
-
-.tab-submitted .stat-icon {
-  /* #92400e */
-  filter: brightness(0) saturate(100%) invert(32%) sepia(59%) saturate(902%)
-          hue-rotate(1deg) brightness(96%) contrast(92%);
-}
-
-.tab-inReview .stat-icon {
-  /* #075985 */
-  filter: brightness(0) saturate(100%) invert(25%) sepia(72%) saturate(819%)
-          hue-rotate(169deg) brightness(89%) contrast(90%);
-}
-
-.tab-approved .stat-icon {
-  /* #166534 */
-  filter: brightness(0) saturate(100%) invert(35%) sepia(13%) saturate(1227%)
-          hue-rotate(73deg) brightness(92%) contrast(88%);
-}
-
-.tab-live .stat-icon {
-  /* #5b21b6 */
-  filter: brightness(0) saturate(100%) invert(22%) sepia(58%) saturate(958%)
-          hue-rotate(238deg) brightness(89%) contrast(91%);
-}
-
-.stat-label-text {
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.stat-value {
-  font-size: 22px;
-  font-weight: 800;
-}
-
-/* Search bar + filter */
-.search-card {
-  background: #f8fafc;              
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 14px;
-  margin-bottom: 16px;
-}
-
-/* Row that holds input + select */
-.search-row {
-  display: grid;
-  grid-template-columns: 1fr 220px;  
-  gap: 16px;
-  align-items: center;
-}
-
-/* Search input with left icon */
-.search-input-wrap {
-  position: relative;
-}
-.search-ico {
-  position: absolute;
-  left: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 18px;
-  height: 18px;
-  opacity: .6;
-  pointer-events: none;
-}
-#bio-search {
-  width: 100%;
-  height: 44px;
-  padding: 0 12px 0 40px;           
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  outline: none;
-  font-size: 14px;
-  color: #111827;
-}
-#bio-search::placeholder { color: #9aa3af; }
-#bio-search:focus {
-  border-color: #c7d2fe;
-  box-shadow: 0 0 0 3px rgba(99,102,241,.15);
-}
-
-/* Select styled to match, with custom caret */
-.select-wrap {
-  position: relative;
-}
-#bio-status {
-  appearance: none;                 
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  width: 100%;
-  height: 44px;
-  padding: 0 36px 0 14px;           
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  font-size: 14px;
-  color: #111827;
-  outline: none;
-}
-#bio-status:focus {
-  border-color: #c7d2fe;
-  box-shadow: 0 0 0 3px rgba(99,102,241,.15);
-}
-.select-caret {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 16px;
-  height: 16px;
-  pointer-events: none;
-  opacity: .6;
-}
-
-/* Responsive: stack on small screens */
-@media (max-width: 720px) {
-  .search-row {
-    grid-template-columns: 1fr;
+/* Optional: make the iframe content feel inset on large screens */
+@media (min-width: 1280px) {
+  .content-frame {
+    background: #f3f4f6;
   }
-}
-
-/* Table */
-/* ----- Div-based bios grid (replaces table layout) ----- */
-.bios-grid {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: minmax(0, 1fr); /* each column flexes equally */
-  align-items: center;
-}
-
-.bios-head {
-  font-weight: 600;
-  color: #0f172a;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.bios-head > span,
-.bios-row > .bios-col {
-  padding: 12px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.bios-row {
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.bios-list .bios-row:last-child > .bios-col {
-  padding-bottom: 0;
-}
-
-.bios-list .bios-row:last-child {
-  border-bottom: none;
-}
-
-.bios-row > .bios-col:first-child {
-  white-space: normal; /* allow wrapping for name/email */
-}
-
-.bios-list.is-empty { 
-  margin-top: 16px;        /* gap between "Bios (0)" header and empty message */
-}
-.bios-list .empty-state {
-  color: #6b7280; 
-  padding: 8px 12px;       /* optional: comfy empty message */
-  grid-column: 1 / -1;     /* span all columns */
-}
-
-/* Generic status icon filters (previously scoped to .table) */
-/* Pill-style status label */
-.status {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  border-radius: 9999px;   /* full pill */
-  line-height: 1;
-  white-space: nowrap;     /* keep it on one line */
-  border: 1px solid transparent; /* optional: lets color variants add borders */
-}
-
-.status .status-icon {
-  width: 14px;
-  height: 14px;
-  display: inline-block;
-  vertical-align: middle;
-  margin-right: 0;
-  filter: brightness(0) saturate(100%);
-}
-.status.submitted .status-icon {
-  filter: brightness(0) saturate(100%) invert(32%) sepia(59%) saturate(902%)
-          hue-rotate(1deg) brightness(96%) contrast(92%);
-}
-.status.review .status-icon {
-  filter: brightness(0) saturate(100%) invert(25%) sepia(72%) saturate(819%)
-          hue-rotate(169deg) brightness(89%) contrast(90%);
-}
-.status.approved .status-icon {
-  filter: brightness(0) saturate(100%) invert(35%) sepia(13%) saturate(1227%)
-          hue-rotate(73deg) brightness(92%) contrast(88%);
-}
-.status.live .status-icon {
-  filter: brightness(0) saturate(100%) invert(22%) sepia(58%) saturate(958%)
-          hue-rotate(238deg) brightness(89%) contrast(91%);
-}
-
-/* Responsive: stack columns on small screens */
-@media (max-width: 720px) {
-  .bios-grid {
-    grid-template-columns: 1fr;
-  }
-  .bios-head { display: none; } /* hide header row on mobile */
-  .bios-row { grid-row-gap: 6px; }
-}
-
-
-.submitted { background: #fef3c7; color: #92400e; }
-.review    { background: #e0f2fe; color: #075985; }
-.approved  { background: #dcfce7; color: #166534; }
-.live      { background: #ede9fe; color: #5b21b6; }
-
-.view-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  border: 1px solid #1e293b;  /* dark border */
-  background: white;
-  color: #1e293b;
-  border-radius: 6px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background 0.2s, color 0.2s;
-}
-
-.view-btn:hover {
-  background: #f1f5f9;
-}
-
-.view-icon {
-  width: 14px;
-  height: 14px;
 }

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bios</title>
+  <link rel="stylesheet" href="../css/Bios.css" />
+</head>
+<body>
+  <header class="page-header">
+    <div class="page-headings">
+      <h1 id="page-title">All Bios</h1>
+      <p id="page-subtitle">Overview of all employee bio submissions</p>
+    </div>
+    <button id="export-csv" class="btn-export" type="button">
+      <img src="../icons/export.svg" alt="" class="btn-export-ico" />
+      Export CSV
+    </button>
+  </header>
+
+  <section id="page-content"></section>
+
+  <!-- Templates -->
+  <template id="stats-wrapper-template">
+    <div class="stats-wrapper" id="stats-root">
+      <div class="stats"></div>
+    </div>
+  </template>
+
+  <template id="stats-tile-template">
+    <div class="stat stat--tab">
+      <div class="stat-head">
+        <img class="stat-icon" alt="" />
+        <span class="stat-label-text"></span>
+      </div>
+      <div class="stat-value"></div>
+    </div>
+  </template>
+
+  <template id="search-card-template">
+    <div class="card" id="search">
+      <div class="search-row">
+        <div class="search-input-wrap">
+          <img src="../icons/search.svg" class="search-ico" alt="" />
+          <input id="bio-search" class="js-bio-search" type="text" placeholder="Search bios..." />
+        </div>
+
+        <div class="select-wrap">
+          <select id="bio-status" class="js-bio-status" aria-label="Filter by status">
+            <option value="All Status">All Status</option>
+            <option value="Submitted">Submitted</option>
+            <option value="Ready for Review">In Review</option>
+            <option value="Approved">Approved</option>
+            <option value="Live">Live</option>
+          </select>
+          <img src="../icons/chevron-down.svg" class="select-caret" alt="" />
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <template id="bios-list-template">
+    <div class="card bios-card">
+      <div class="table-header">
+        <h2 class="table-title">Bios (<span id="bios-count"></span>)</h2>
+      </div>
+
+      <div class="bios-head bios-grid">
+        <span>Employee</span>
+        <span>Status</span>
+        <span>Created</span>
+        <span>Review Info</span>
+        <span>Actions</span>
+      </div>
+
+      <div class="bios-list js-bios-list"></div>
+    </div>
+  </template>
+
+  <template id="bio-item-template">
+    <div class="bios-row bios-grid js-bio-row">
+      <div class="bios-col">
+        <span class="js-name"></span><br />
+        <small class="js-email"></small>
+      </div>
+      <div class="bios-col">
+        <span class="status">
+          <img class="status-icon" alt="" />
+          <span class="js-status-text"></span>
+        </span>
+      </div>
+      <div class="bios-col js-created"></div>
+      <div class="bios-col js-review-info"></div>
+      <div class="bios-col">
+        <button class="view-btn">
+          <img src="../icons/eye.svg" alt="View" class="view-icon" />
+          View
+        </button>
+      </div>
+    </div>
+  </template>
+
+  <script type="module" src="../scripts/Bios_content.js"></script>
+</body>
+</html>
