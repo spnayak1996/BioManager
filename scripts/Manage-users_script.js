@@ -1,202 +1,161 @@
-import { Bio } from "../scripts/Bio.js";
+// scripts/Manage-users_script.js
+import { User } from "./User.js";
 
-// ---------- DOM refs ----------
+// DOM
 const pageTitle = document.getElementById("page-title");
 const pageSubtitle = document.getElementById("page-subtitle");
 const pageContent = document.getElementById("page-content");
-const exportBtn = document.getElementById("export-csv");
+const addBtn = document.getElementById("export-csv");
 
-// ---------- Templates ----------
+// Templates
 const $ = (id) => document.getElementById(id);
 const tplStatsWrapper = $("stats-wrapper-template");
 const tplStatsTile = $("stats-tile-template");
 const tplSearchCard = $("search-card-template");
-const tplBiosList = $("bios-list-template");
-const tplBioItem  = $("bio-item-template");
-const tplComingSoon = $("coming-soon-template");
-
+const tplUsersList = $("users-list-template");
+const tplUserItem  = $("user-item-template");
 const clone = (tpl) => tpl.content.firstElementChild.cloneNode(true);
 
-// ---------- Data / constants ----------
-const statusImages = {
-  "Submitted": "../icons/clock.svg",
-  "Ready for Review": "../icons/circle-alert.svg",
-  "Approved": "../icons/circle-check.svg",
-  "Live": "../icons/building.svg",
-};
-
-const statusChipClass = {
-  "Submitted": "submitted",
-  "Ready for Review": "review",
-  "Approved": "approved",
-  "Live": "live",
-};
-
+// Icons (swap to whatever you have in /icons)
 const tileMeta = {
-  total:     { label: "Total Bios",       icon: "../icons/file-text.svg",    color: "#1f2937" },
-  submitted: { label: "Submitted",        icon: "../icons/clock.svg",        color: "#92400e" },
-  inReview:  { label: "In Review",        icon: "../icons/circle-alert.svg", color: "#075985" },
-  approved:  { label: "Approved",         icon: "../icons/circle-check.svg", color: "#166534" },
-  live:      { label: "Live",             icon: "../icons/building.svg",     color: "#5b21b6" },
+  totalUsers:    { label: "Total Users",     icon: "../icons/users.svg",        klass: "user-stat--gray"  },
+  activeUsers:   { label: "Active Users",    icon: "../icons/user-check.svg", klass: "user-stat--green" },
+  compliance:    { label: "Compliance Team", icon: "../icons/shield.svg",    klass: "user-stat--blue"  },
+  inactiveUsers: { label: "Inactive Users",  icon: "../icons/user-x.svg",        klass: "user-stat--red"   },
 };
 
-// ---------- Helpers ----------
-function computeStats(list) {
-  const total = list.length;
-  const submitted = list.filter(b => b.status === "Submitted").length;
-  const inReview = list.filter(b => b.status === "Ready for Review").length;
-  const approved = list.filter(b => b.status === "Approved").length;
-  const live = list.filter(b => b.status === "Live").length;
-  return { total, submitted, inReview, approved, live };
+const statusImages = {
+  active: "../icons/user-check.svg",
+  compliance: "../icons/shield.svg",
+  inactive: "../icons/user-x.svg",
+};
+
+const statusChipClass = { active: "active", compliance: "compliance", inactive: "inactive" };
+
+// --- Stats helpers ---
+function computeUserStats(users) {
+  const totalUsers = users.length;
+  const activeUsers = users.filter(u => u.status === "active").length;
+  const compliance  = users.filter(u => u.status === "compliance").length;
+  const inactiveUsers = users.filter(u => u.status === "inactive").length;
+  return { totalUsers, activeUsers, compliance, inactiveUsers };
 }
 
-function buildStats(stats) {
+function buildStatsTiles(statsObj) {
   const wrapper = clone(tplStatsWrapper);
-  const container = wrapper.querySelector(".stats");
+  const grid = wrapper.querySelector(".stats");
 
-  const order = [
-    ["total", stats.total],
-    ["submitted", stats.submitted],
-    ["inReview", stats.inReview],
-    ["approved", stats.approved],
-    ["live", stats.live],
-  ];
-
-  for (const [key, value] of order) {
+  ["totalUsers", "activeUsers", "compliance", "inactiveUsers"].forEach(key => {
     const meta = tileMeta[key];
+    const val = statsObj[key] ?? 0;
+
     const tile = clone(tplStatsTile);
-    tile.dataset.key = key;
-    tile.classList.add(`tab-${key}`);
-    tile.style.color = meta.color;
+    tile.classList.add(meta.klass);
 
     const icon = tile.querySelector(".stat-icon");
     const label = tile.querySelector(".stat-label-text");
-    const val = tile.querySelector(".stat-value");
+    const value = tile.querySelector(".stat-value");
 
     icon.src = meta.icon;
     icon.alt = meta.label;
     label.textContent = meta.label;
-    val.textContent = value;
+    value.textContent = String(val);
 
-    container.appendChild(tile);
-  }
+    grid.appendChild(tile);
+  });
+
   return wrapper;
 }
 
-function updateStatsCounts(wrapper, stats) {
-  const map = {
-    total: stats.total,
-    submitted: stats.submitted,
-    inReview: stats.inReview,
-    approved: stats.approved,
-    live: stats.live,
-  };
-  wrapper.querySelectorAll(".stat").forEach(tile => {
-    const key = tile.dataset.key;
-    const val = tile.querySelector(".stat-value");
-    if (val && key in map) val.textContent = map[key];
-  });
-}
+// --- List helpers ---
+function buildUserItem(user) {
+  const row = clone(tplUserItem);
+  row.dataset.id = user.id;
 
-function buildSearchCard() {
-  return clone(tplSearchCard);
-}
-
-function buildItem(bio) {
-  const row = clone(tplBioItem);
-  row.dataset.id = bio.id;
-
-  row.querySelector(".js-name").textContent  = bio.name;
-  row.querySelector(".js-email").textContent = bio.email;
+  row.querySelector(".js-name").textContent  = user.userName;
+  row.querySelector(".js-email").textContent = user.email;
+  row.querySelector(".js-role").textContent  = capitalize(user.role);
 
   const statusWrap = row.querySelector(".status");
-  statusWrap.classList.add(statusChipClass[bio.status] || "");
+  statusWrap.classList.add(statusChipClass[user.status] || "");
 
   const ico = row.querySelector(".status-icon");
-  ico.src = statusImages[bio.status] || "../icons/settings.svg";
-  ico.alt = bio.status;
+  ico.src = statusImages[user.status] || "../icons/settings.svg";
+  ico.alt = user.status;
 
-  row.querySelector(".js-status-text").textContent = bio.status;
-  row.querySelector(".js-created").textContent     = bio.createdLabel;
-  row.querySelector(".js-review-info").textContent = bio.reviewInfo;
+  row.querySelector(".js-status-text").textContent = capitalize(user.status);
+  row.querySelector(".js-created").textContent     = user.createdLabel;
 
   return row;
 }
 
-function buildList(list) {
-  const card   = clone(tplBiosList);
-  const head   = card.querySelector(".bios-head");
-  const listEl = card.querySelector(".js-bios-list");
-  const count  = card.querySelector("#bios-count");
+function buildUsersList(list) {
+  const card   = clone(tplUsersList);
+  const head   = card.querySelector(".users-head");
+  const listEl = card.querySelector(".js-users-list");
+  const count  = card.querySelector("#users-count");
   count.textContent = String(list.length);
 
   if (list.length === 0) {
     if (head) head.style.display = "none";
     listEl.classList.add("is-empty");
-
     const empty = document.createElement("div");
-    empty.className = "bios-row bios-grid empty-state";
-    const span = document.createElement("span");
-    span.textContent = "No results";
-    empty.appendChild(span);
+    empty.className = "users-row users-grid empty-state";
+    empty.textContent = "No results";
     listEl.appendChild(empty);
   } else {
     if (head) head.style.display = "";
     listEl.classList.remove("is-empty");
-
     const frag = document.createDocumentFragment();
-    for (const b of list) frag.appendChild(buildItem(b));
+    for (const u of list) frag.appendChild(buildUserItem(u));
     listEl.appendChild(frag);
   }
 
   return card;
 }
 
-// ---------- Page rendering ----------
-function renderAllBios() {
-  const bios  = Bio.all();
-  const stats = computeStats(bios);
+// --- Page render ---
+function renderManageUsers() {
+  const users = User.all();
+  const stats = computeUserStats(users);
 
-  const statsEl = buildStats(stats);
-  const searchEl = buildSearchCard();
-  const listEl   = buildList(bios);
+  const statsEl  = buildStatsTiles(stats);
+  const searchEl = clone(tplSearchCard);
+  const listEl   = buildUsersList(users);
 
   pageContent.replaceChildren(statsEl, searchEl, listEl);
 
-  const search   = searchEl.querySelector("#bio-search");
-  const select   = searchEl.querySelector("#bio-status");
-  const rowsWrap = listEl.querySelector(".js-bios-list");
-  const countEl  = listEl.querySelector("#bios-count");
-  const head     = listEl.querySelector(".bios-head");
+  const search   = searchEl.querySelector("#user-search");
+  const select   = searchEl.querySelector("#user-status");
+  const rowsWrap = listEl.querySelector(".js-users-list");
+  const countEl  = listEl.querySelector("#users-count");
+  const head     = listEl.querySelector(".users-head");
 
   function applyFilters() {
     const q = (search.value || "").trim().toLowerCase();
-    const status = select.value;
+    const status = select.value; // "all" | "active" | "inactive" | "compliance"
 
-    const filtered = bios.filter(b => {
+    const filtered = users.filter(u => {
       const matchesText =
-        !q || b.name.toLowerCase().includes(q) || b.email.toLowerCase().includes(q);
-      const matchesStatus = status === "All Status" || b.status === status;
+        !q || u.userName.toLowerCase().includes(q) || u.email.toLowerCase().includes(q);
+      const matchesStatus = status === "all" || u.status === status;
       return matchesText && matchesStatus;
     });
 
-    updateStatsCounts(statsEl, computeStats(bios));
-
+    // toggle header + list
     if (head) head.style.display = filtered.length ? "" : "none";
-
     rowsWrap.replaceChildren();
+
     if (filtered.length === 0) {
       rowsWrap.classList.add("is-empty");
       const empty = document.createElement("div");
-      empty.className = "bios-row bios-grid empty-state";
-      const span = document.createElement("span");
-      span.textContent = "No results";
-      empty.appendChild(span);
+      empty.className = "users-row users-grid empty-state";
+      empty.textContent = "No results";
       rowsWrap.appendChild(empty);
     } else {
       rowsWrap.classList.remove("is-empty");
       const frag = document.createDocumentFragment();
-      for (const b of filtered) frag.appendChild(buildItem(b));
+      for (const u of filtered) frag.appendChild(buildUserItem(u));
       rowsWrap.appendChild(frag);
     }
 
@@ -207,16 +166,13 @@ function renderAllBios() {
   select.addEventListener("change", applyFilters);
 }
 
-if (exportBtn) {
-  exportBtn.onclick = () => {
-    console.log("Export CSV button tapped!");
-    alert("Export CSV button tapped!");
-  };
-}
-
-// ---------- Boot ----------
+// Boot
 window.addEventListener("load", () => {
-  pageTitle.textContent = "Manager Users";
-  pageSubtitle.textContent = "Manage User accounts and permissions";
-  renderAllBios();
+  pageTitle.textContent = "Manage Users";
+  pageSubtitle.textContent = "Manage user accounts and permissions";
+  renderManageUsers();
 });
+
+if (addBtn) addBtn.onclick = () => alert("Add User clicked");
+
+function capitalize(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
