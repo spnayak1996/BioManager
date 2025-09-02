@@ -1,4 +1,3 @@
-<!-- pages/Manage-users.html -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,42 +24,18 @@
     </div>
   </template>
 
-  <!-- Screenshot-style stat tile -->
+  <!-- Stat tile -->
   <template id="stats-tile-template">
     <div class="stat user-stat">
       <div class="stat-head">
-        <span class="stat-ico-box">
-          <img class="stat-icon" alt="" />
-        </span>
+        <span class="stat-ico-box"><img class="stat-icon" alt="" /></span>
         <span class="stat-label-text"></span>
       </div>
       <div class="stat-value"></div>
     </div>
   </template>
 
-  <!-- Search -->
-  <template id="search-card-template">
-    <div class="card" id="search">
-      <div class="search-row">
-        <div class="search-input-wrap">
-          <img src="../icons/search.svg" class="search-ico" alt="" />
-          <input id="user-search" class="js-user-search" type="text" placeholder="Search users..." />
-        </div>
-
-        <div class="select-wrap">
-          <select id="user-status" class="js-user-status" aria-label="Filter by status">
-            <option value="all">All Status</option>
-            <option value="active">Active</option>
-            <option value="compliance">Compliance</option>
-            <option value="inactive">Inactive</option>
-          </select>
-          <img src="../icons/chevron-down.svg" class="select-caret" alt="" />
-        </div>
-      </div>
-    </div>
-  </template>
-
-  <!-- Users list (div-based grid) -->
+  <!-- Users list -->
   <template id="users-list-template">
     <div class="card users-card">
       <div class="table-header">
@@ -95,13 +70,61 @@
       </div>
       <div class="users-col js-created"></div>
       <div class="users-col">
-        <button class="view-btn">
-          <img src="../icons/eye.svg" alt="View" class="view-icon" />
-          View
-        </button>
+        <div class="actions">
+          <button class="btn btn-edit">
+            <img src="../icons/file-pen-line.svg" alt="" class="btn-ico" />
+            Edit
+          </button>
+          <button class="btn btn-toggle">
+            <span class="btn-label"></span>
+          </button>
+        </div>
       </div>
     </div>
   </template>
+
+  <!-- Add/Edit User Modal -->
+  <template id="user-modal-template">
+  <div class="modal-backdrop" data-modal>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="user-modal-title">
+      <div class="modal-header">
+        <h2 class="modal-title" id="user-modal-title">Add User</h2>
+        <button class="modal-close" type="button" aria-label="Close">&times;</button>
+      </div>
+
+      <form id="user-form" novalidate>
+        <div class="form-grid">
+          <div class="form-field">
+            <label for="f-userName">Full name</label>
+            <input id="f-userName" name="userName" type="text" required />
+            <small class="field-error" data-err-userName></small>
+          </div>
+
+          <div class="form-field">
+            <label for="f-email">Email</label>
+            <input id="f-email" name="email" type="email" required />
+            <small class="field-error" data-err-email></small>
+          </div>
+
+          <div class="form-field">
+            <label for="f-role">Role</label>
+            <select id="f-role" name="role" required>
+              <option value="">Select…</option>
+              <option value="admin">Admin</option>
+              <option value="user">User</option>
+            </select>
+            <small class="field-error" data-err-role></small>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary js-cancel">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save User</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</template>
 
   <script type="module" src="../scripts/Manage-users_script.js"></script>
 </body>

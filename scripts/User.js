@@ -24,14 +24,74 @@ export class User {
     return `${m}/${d}/${y}`;
   }
 
+  // ---------- Storage ----------
+  static get STORAGE_KEY() { return "bm_users"; }
+
+  static _loadRaw() {
+    const json = localStorage.getItem(User.STORAGE_KEY);
+    if (json) {
+      try { return JSON.parse(json); } catch { /* fall through */ }
+    }
+    // seed on first run
+    const seed = [
+      { id: "u1", userName: "Achal Aggarwal",  email: "achal@bornwest.com",   role: "admin", status: "active",     createdAt: "2025-07-14" },
+      { id: "u2", userName: "Prateek Sharma",  email: "prateek@bornwest.com", role: "user",  status: "active",     createdAt: "2025-07-07" },
+      { id: "u3", userName: "Himalaya Rajput", email: "himalaya@bornwest.com",role: "user",  status: "compliance", createdAt: "2025-08-01" },
+      { id: "u4", userName: "Sumit Raj",       email: "sumit@bornwest.com",   role: "user",  status: "inactive",   createdAt: "2025-08-14" },
+    ];
+    localStorage.setItem(User.STORAGE_KEY, JSON.stringify(seed));
+    return seed;
+  }
+
+  static _saveRaw(arr) {
+    localStorage.setItem(User.STORAGE_KEY, JSON.stringify(arr));
+  }
+
   static all() {
-    return User.DATA.map(d => new User(d));
+    return User._loadRaw().map(o => new User(o));
+  }
+
+  static findById(id) {
+    const raw = User._loadRaw();
+    const obj = raw.find(r => r.id === id);
+    return obj ? new User(obj) : null;
+  }
+
+  static existsEmail(email) {
+    const raw = User._loadRaw();
+    const needle = (email || "").trim().toLowerCase();
+    return raw.some(r => (r.email || "").toLowerCase() === needle);
+  }
+
+  static create(o) {
+    const raw = User._loadRaw();
+    const id = (globalThis.crypto?.randomUUID?.() || `u_${Date.now()}_${Math.random().toString(36).slice(2,8)}`);
+    const rec = {
+      id,
+      userName: o.userName,
+      email: o.email,
+      role: o.role,
+      status: o.status,
+      createdAt: (o.createdAt instanceof Date ? o.createdAt : new Date(o.createdAt)).toISOString(),
+    };
+    raw.push(rec);
+    User._saveRaw(raw);
+    return new User(rec);
+  }
+
+  static update(id, patch) {
+    const raw = User._loadRaw();
+    const idx = raw.findIndex(r => r.id === id);
+    if (idx === -1) return null;
+    const merged = { ...raw[idx], ...patch };
+    raw[idx] = merged;
+    User._saveRaw(raw);
+    return new User(merged);
+  }
+
+  static remove(id) {
+    const raw = User._loadRaw();
+    const next = raw.filter(r => r.id !== id);
+    User._saveRaw(next);
   }
 }
-
-// Demo seed data — adjust as needed
-User.DATA = [
-  { id: "1", userName: "Ada Lovelace",  email: "ada@acme.io",   role: "admin", status: "active",     createdAt: "2024-11-12" },
-  { id: "2", userName: "Grace Hopper",  email: "grace@acme.io", role: "user",  status: "inactive",   createdAt: "2025-01-07" },
-  // { id: "3", userName: "Alan Turing",   email: "alan@acme.io",  role: "user",  status: "compliance", createdAt: "2025-02-15" },
-];
