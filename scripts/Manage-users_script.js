@@ -75,7 +75,7 @@ function buildUserItem(user) {
   // Toggle button text + style
   const toggleBtn = row.querySelector(".btn-toggle");
   const label = toggleBtn.querySelector(".btn-label");
-  const shouldActivate = user.status === "inactive";
+  const shouldActivate = user.status === "inactive" || user.status === "compliance";
   label.textContent = shouldActivate ? "Activate" : "Deactivate";
   toggleBtn.classList.add(shouldActivate ? "btn-activate" : "btn-deactivate");
 
@@ -106,13 +106,27 @@ function buildUsersList(list) {
 }
 
 // --- Modal helpers ---
-function openAddUserModal() {
+function openUserModal({ mode = "add", user = null } = {}) {
   const modal = clone(tplUserModal);
   document.body.appendChild(modal);
 
   const form = modal.querySelector("#user-form");
   const closeBtn = modal.querySelector(".modal-close");
   const cancelBtn = modal.querySelector(".js-cancel");
+  const titleEl = modal.querySelector("#user-modal-title");
+  const saveBtn = modal.querySelector(".btn-primary");
+
+  // Configure for add vs edit
+  const isEdit = mode === "edit" && user;
+  titleEl.textContent = isEdit ? "Edit User" : "Add User";
+  saveBtn.textContent = isEdit ? "Save Changes" : "Save User";
+
+  // Prefill for edit
+  if (isEdit) {
+    form.elements.userName.value = user.userName;
+    form.elements.email.value = user.email;
+    form.elements.role.value = user.role;
+  }
 
   function destroy() {
     document.removeEventListener("keydown", escHandler);
@@ -130,23 +144,29 @@ function openAddUserModal() {
     clearErrors(form);
 
     const data = formToObject(new FormData(form));
-    const { valid, errors } = validateUser(data);
+    const { valid, errors } = validateUser(data, { excludeId: isEdit ? user.id : null });
     if (!valid) { paintErrors(form, errors); return; }
 
-    // Create with defaults for fields removed from the form
-    User.create({
-      userName: data.userName.trim(),
-      email: data.email.trim(),
-      role: data.role,
-      status: "inactive",         // default
-      createdAt: new Date(),    // default
-    });
+    if (isEdit) {
+      User.update(user.id, {
+        userName: data.userName.trim(),
+        email: data.email.trim(),
+        role: data.role
+      });
+    } else {
+      User.create({
+        userName: data.userName.trim(),
+        email: data.email.trim(),
+        role: data.role,
+        status: "inactive",     // default for new users
+        createdAt: new Date()
+      });
+    }
 
     destroy();
     renderManageUsers();
   });
 }
-
 
 function formToObject(fd) {
   const o = {};
@@ -154,18 +174,19 @@ function formToObject(fd) {
   return o;
 }
 
-function validateUser(o) {
+function validateUser(o, { excludeId = null } = {}) {
   const errors = {};
   const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   if (!o.userName || !o.userName.trim()) errors.userName = "Name is required.";
   if (!o.email || !emailRe.test(o.email)) errors.email = "Enter a valid email.";
-  else if (User.existsEmail(o.email)) errors.email = "Email already exists.";
+  else if (User.emailInUse(o.email, excludeId)) errors.email = "Email already exists.";
 
   if (!["admin","user"].includes(o.role)) errors.role = "Select a role.";
 
   return { valid: Object.keys(errors).length === 0, errors };
 }
+
 
 
 function paintErrors(form, errors) {
@@ -191,19 +212,28 @@ function renderManageUsers() {
 
 // Toggle handler (delegated)
 pageContent.addEventListener("click", (e) => {
-  const btn = e.target.closest(".btn-toggle");
-  if (!btn) return;
-  const row = btn.closest(".js-user-row");
-  if (!row) return;
+  // Toggle status
+  const toggleBtn = e.target.closest(".btn-toggle");
+  if (toggleBtn) {
+    const row = toggleBtn.closest(".js-user-row");
+    const rec = row ? User.findById(row.dataset.id) : null;
+    if (rec) {
+      const next = (rec.status === "inactive") ? "active" : "inactive";
+      User.update(rec.id, { status: next });
+      renderManageUsers();
+    }
+    return;
+  }
 
-  const id = row.dataset.id;
-  const rec = User.findById(id);
-  if (!rec) return;
-
-  const next = (rec.status === "inactive") ? "active" : "inactive";
-  User.update(id, { status: next });
-  renderManageUsers();
+  // Edit user
+  const editBtn = e.target.closest(".btn-edit");
+  if (editBtn) {
+    const row = editBtn.closest(".js-user-row");
+    const rec = row ? User.findById(row.dataset.id) : null;
+    if (rec) openUserModal({ mode: "edit", user: rec });
+  }
 });
+
 
 // Boot
 window.addEventListener("load", () => {
@@ -213,6 +243,6 @@ window.addEventListener("load", () => {
 });
 
 // Add user -> open modal
-if (addBtn) addBtn.onclick = openAddUserModal;
+if (addBtn) addBtn.onclick = () => openUserModal({ mode: "add" });
 
 function capitalize(s){ return s ? s[0].toUpperCase() + s.slice(1) : s; }

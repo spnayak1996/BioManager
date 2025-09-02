@@ -94,4 +94,10 @@ export class User {
     const next = raw.filter(r => r.id !== id);
     User._saveRaw(next);
   }
+
+  static emailInUse(email, excludeId = null) {
+  const raw = User._loadRaw();
+  const needle = (email || "").trim().toLowerCase();
+  return raw.some(r => r.id !== excludeId && (r.email || "").toLowerCase() === needle);
+}
 }
