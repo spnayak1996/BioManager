@@ -1,0 +1,151 @@
+/* BioManager_style.css */
+/* Shell layout + sidebar styling. Right-panel pages bring their own CSS. */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  background: #f9fafb;
+  color: #0f172a;
+}
+
+/* ---------- Sidebar ---------- */
+.sidebar {
+  width: 280px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 18px;
+  border-right: 1px solid #e5e7eb;
+  position: relative;
+}
+
+/* Brand block */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 4px 14px;
+}
+.brand-mark {
+  width: 48px; height: 48px;
+  border-radius: 14px;
+  background: #0f172a;
+  display: grid; place-items: center;
+  overflow: hidden;
+}
+.brand-mark img { width: 22px; height: 22px; filter: brightness(0) invert(1); }
+.brand-texts { line-height: 1.2; }
+.brand-title { font-size: 22px; font-weight: 800; letter-spacing: -0.01em; }
+.brand-subtitle { font-size: 14px; color: #6b7280; margin-top: 2px; }
+
+.sidebar-sep { height: 1px; background: #e5e7eb; margin: 10px 0 14px; }
+
+/* NAVIGATION label */
+.nav-label {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: #6b7280;
+  font-weight: 700;
+  margin: 6px 6px 10px;
+}
+
+/* Nav list */
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow-y: auto;
+  flex: 1;
+  padding-right: 4px;
+  padding-bottom: 72px; /* space for fixed user block */
+}
+
+.nav-link {
+  display: flex; align-items: center; gap: 12px;
+  text-decoration: none;
+  color: #334155;
+  font-size: 18px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  transition: background .15s ease, color .15s ease;
+}
+.nav-link:hover { background: #f1f5f9; color: #0f172a; }
+.nav-link.active {
+  background: #eef2ff;
+  color: #0f172a;
+  font-weight: 800;
+}
+
+.nav-ico {
+  width: 20px; height: 20px; flex: 0 0 20px; display: grid; place-items: center;
+}
+.nav-ico img { width: 100%; height: 100%; object-fit: contain; display: block; }
+
+/* Fixed user block */
+.user-info {
+  position: absolute;
+  left: 18px; right: 18px; bottom: 16px;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 12px;
+  display: flex; justify-content: space-between; align-items: center;
+  background: #fff;
+  padding: 12px 14px;
+}
+
+.user-left { display: flex; align-items: center; gap: 10px; }
+
+.user-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: #22c55e; color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: bold; text-transform: uppercase;
+}
+
+.user-meta { line-height: 1.2; }
+.user-name { font-weight: 700; font-size: 15px; }
+.user-role { font-size: 13px; color: #6b7280; }
+
+.user-logout {
+  border: none; background: #f9fafb; border-radius: 8px; padding: 6px;
+  cursor: pointer; transition: background 0.2s ease, transform 0.1s ease;
+  display: flex; align-items: center; justify-content: center;
+}
+.user-logout:hover { background: #f3f4f6; transform: scale(1.05); }
+.user-logout img {
+  width: 20px; height: 20px; display: block;
+  filter: brightness(0) invert(0.2); transition: filter 0.2s ease;
+}
+.user-logout:hover img { filter: brightness(0) invert(0.4); }
+
+/* ---------- Main (right panel container) ---------- */
+.main-content {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  background: #f9fafb;
+  display: grid;
+}
+
+/* The iframe fills the right panel */
+.content-frame {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+  background: #f9fafb;
+}
+
+/* Optional: make the iframe content feel inset on large screens */
+@media (min-width: 1280px) {
+  .content-frame {
+    background: #f3f4f6;
+  }
+}
